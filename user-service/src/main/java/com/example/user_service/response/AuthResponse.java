@@ -1,0 +1,22 @@
+package com.example.user_service.response;
+
+
+import com.example.user_service.entity.UserRole;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class AuthResponse {
+
+    private String token;
+    private boolean isTokenExpired;
+    private String error;
+    private String userRole;
+}
