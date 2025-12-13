@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletRequest;
 import ma.cabinet.rendezvous_service.enums.StatutRDV;
 import ma.cabinet.rendezvous_service.feign.UserFeignClient;
+import ma.cabinet.rendezvous_service.response.AuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,21 +42,101 @@ public class RendezVousServiceImpl implements RendezVousService {
 
     @Override
     public RendezVousResponse createRendezVous(RendezVousRequest request) {
-        try{
-            if(rdvValidations.isTokenValid(httpRequest.getHeader("Authorization"))){
-                if(rdvValidations.validateRendezVousRequest(request)){
-                    if(rdvValidations.isCabinetIdValid(request.getCabinetId())){
-                        if (rdvValidations.ispatientExists(request.getPatientId())) {
-                            RendezVous rdv = EntityToRequest.toEntity(request);
-                            RendezVous saved = rendezVousRepository.save(rdv);
-                            return mapper.toResponse(saved);
-                        }
-                    }
-                }
+        try {
+            System.out.println("═══════════════════════════════════════════");
+            System.out.println("🔄 CRÉATION RENDEZ-VOUS - DÉBUT");
+            System.out.println("═══════════════════════════════════════════");
+
+            // ═══════════════════════════════════════════════════════════
+            // ✅ 1️⃣ VALIDATION TOKEN (validité + extraction rôle)
+            // ═══════════════════════════════════════════════════════════
+            System.out.println("\n1️⃣ Validation du TOKEN...");
+
+            String authHeader = httpRequest.getHeader("Authorization");
+            AuthResponse authResponse = rdvValidations.validateToken(authHeader);
+
+            if (authResponse == null) {
+                throw new IllegalArgumentException("❌ Token absent ou invalide");
             }
-            return null;
-        } catch (Exception e){
-            throw new RuntimeException("Erreur lors de la création du rendez-vous: " + e.getMessage());
+
+            if (authResponse.isTokenExpired()) {
+                throw new IllegalArgumentException("❌ Token expiré");
+            }
+
+            String userRole = authResponse.getUserRole();
+            if (userRole == null) {
+                throw new IllegalArgumentException("❌ Impossible d'extraire le rôle du token. Erreur: " + authResponse.getError());
+            }
+
+            // Vérifier que le rôle est autorisé (SECRETARY ou ADMIN)
+            if (!userRole.equals("SECRETARY") && !userRole.equals("ADMIN")) {
+                throw new IllegalArgumentException("❌ Rôle non autorisé pour créer un RDV: " + userRole + ". Seuls SECRETARY et ADMIN sont autorisés.");
+            }
+
+            System.out.println("✅ Token valide | Rôle: " + userRole);
+
+            // ═══════════════════════════════════════════════════════════
+            // ✅ 2️⃣ VALIDATION DONNÉES RDV (date, heure, horaires, doublon)
+            // ═══════════════════════════════════════════════════════════
+            System.out.println("\n2️⃣ Validation des DONNÉES du RDV...");
+
+            if (!rdvValidations.validateRendezVousRequest(request)) {
+                throw new IllegalArgumentException("❌ Données du rendez-vous invalides (date passée, heure hors horaires, ou créneau déjà occupé)");
+            }
+
+            System.out.println("✅ Données RDV valides");
+
+            // ═══════════════════════════════════════════════════════════
+            // ✅ 3️⃣ VALIDATION CABINET_ID
+            // ═══════════════════════════════════════════════════════════
+            System.out.println("\n3️⃣ Validation du CABINET_ID...");
+
+            if (!rdvValidations.isCabinetIdValid(request.getCabinetId())) {
+                throw new IllegalArgumentException("❌ Cabinet inexistant avec ID: " + request.getCabinetId());
+            }
+
+            System.out.println("✅ Cabinet_ID valide: " + request.getCabinetId());
+
+            // ═══════════════════════════════════════════════════════════
+            // ✅ 4️⃣ VALIDATION PATIENT_ID
+            // ═══════════════════════════════════════════════════════════
+            System.out.println("\n4️⃣ Validation du PATIENT_ID...");
+
+            if (!rdvValidations.isPatientExists(request.getPatientId())) {
+                throw new IllegalArgumentException("❌ Patient inexistant avec ID: " + request.getPatientId());
+            }
+
+            System.out.println("✅ Patient_ID valide: " + request.getPatientId());
+
+            // ═══════════════════════════════════════════════════════════
+            // ✅ 5️⃣ CRÉATION DU RENDEZ-VOUS
+            // ═══════════════════════════════════════════════════════════
+            System.out.println("\n5️⃣ Création du RDV en base de données...");
+
+            RendezVous rdv = EntityToRequest.toEntity(request);
+            RendezVous saved = rendezVousRepository.save(rdv);
+
+            System.out.println("✅ RDV créé avec succès | ID: " + saved.getIdRendezVous());
+
+            // ═══════════════════════════════════════════════════════════
+            // ✅ 6️⃣ RETOUR DE LA RÉPONSE
+            // ═══════════════════════════════════════════════════════════
+            System.out.println("\n═══════════════════════════════════════════");
+            System.out.println("✅ CRÉATION RENDEZ-VOUS - SUCCÈS");
+            System.out.println("═══════════════════════════════════════════\n");
+
+            return mapper.toResponse(saved);
+
+        } catch (IllegalArgumentException e) {
+            // Erreur métier (validation échouée)
+            System.err.println("\n❌ ERREUR MÉTIER: " + e.getMessage());
+            throw e;
+
+        } catch (Exception e) {
+            // Erreur technique (DB, réseau, etc.)
+            System.err.println("\n❌ ERREUR TECHNIQUE: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la création du rendez-vous: " + e.getMessage(), e);
         }
     }
 

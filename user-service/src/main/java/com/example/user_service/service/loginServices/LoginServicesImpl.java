@@ -77,24 +77,59 @@ public class LoginServicesImpl implements LoginServices {
         return EntityToRes.convertEntityToResponse(userRepository.save(user));
     }
 
+//    @Override
+//    public AuthResponse checkTokenValidity(String token) {
+//        AuthResponse authResponse = new AuthResponse();
+//        try {
+//            if (!jwtUtils.isTokenExpired(token)) {
+//                String role = jwtUtils.extractRole(token);
+//
+//                if (List.of("MEDECIN", "ADMIN", "SECRETARY").contains(role)) {
+//                    authResponse.setToken(token);
+//                    authResponse.setTokenExpired(false);
+//                    authResponse.setError(null);
+//                    authResponse.setUserRole(role);
+//                    return authResponse;
+//                }
+//            }
+//            return authResponse;
+//        } catch (Exception e) {
+//            return authResponse;
+//        }
+//    }
+
     @Override
     public AuthResponse checkTokenValidity(String token) {
-        AuthResponse authResponse = new AuthResponse();
         try {
-            if (!jwtUtils.isTokenExpired(token)) {
-                String role = jwtUtils.extractRole(token);
-
-                if (List.of("MEDECIN", "ADMIN", "SECRETARY").contains(role)) {
-                    authResponse.setToken(token);
-                    authResponse.setTokenExpired(false);
-                    authResponse.setError(null);
-                    authResponse.setUserRole(role);
-                    return authResponse;
-                }
+            // Vérifier si token expiré
+            if (jwtUtils.isTokenExpired(token)) {
+                return AuthResponse.builder()
+                        .token(token)
+                        .tokenExpired(true)
+                        .error("Token expiré")
+                        .userRole(null)
+                        .build();
             }
-            return authResponse;
+
+            // Token valide → extraire le rôle
+            String role = jwtUtils.extractRole(token);
+
+            // Retourner le rôle (PAS de validation du rôle ici)
+            return AuthResponse.builder()
+                    .token(token)
+                    .tokenExpired(false)
+                    .error(null)
+                    .userRole(role)  // Retourne le rôle, peu importe lequel
+                    .build();
+
         } catch (Exception e) {
-            return authResponse;
+            log.error("Erreur validation token: {}", e.getMessage());
+            return AuthResponse.builder()
+                    .token(token)
+                    .tokenExpired(false)
+                    .error("Token invalide ou malformé: " + e.getMessage())
+                    .userRole(null)
+                    .build();
         }
     }
 
