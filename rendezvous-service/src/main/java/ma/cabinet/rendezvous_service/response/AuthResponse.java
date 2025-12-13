@@ -5,6 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -12,7 +18,12 @@ import lombok.NoArgsConstructor;
 public class AuthResponse {
 
     private String token;
-    private boolean isTokenExpired;
+
+    // Utiliser "tokenExpired" au lieu de "isTokenExpired"
+    // pour éviter les problèmes de sérialisation Jackson
+    @JsonProperty("tokenExpired")
+    private boolean tokenExpired;
+
     private String error;
     private String userRole;
 }

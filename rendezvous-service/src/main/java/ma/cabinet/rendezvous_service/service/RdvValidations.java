@@ -4,10 +4,12 @@ import ma.cabinet.rendezvous_service.feign.UserFeignClient;
 import ma.cabinet.rendezvous_service.repository.RendezVousRepository;
 import ma.cabinet.rendezvous_service.request.RendezVousRequest;
 import ma.cabinet.rendezvous_service.response.AuthResponse;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Component
 public class RdvValidations {
 
 
