@@ -114,7 +114,7 @@ public class LoginServicesImpl implements LoginServices {
             // Token valide → extraire le rôle
             String role = jwtUtils.extractRole(token);
 
-            // Retourner le rôle (PAS de validation du rôle ici)
+                // Retourner le rôle (PAS de validation du rôle ici)
             return AuthResponse.builder()
                     .token(token)
                     .tokenExpired(false)
