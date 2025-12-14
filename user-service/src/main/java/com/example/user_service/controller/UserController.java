@@ -1,7 +1,8 @@
 package com.example.user_service.controller;
 
+import com.example.user_service.entity.User;
 import com.example.user_service.request.UserRequest;
-import com.example.user_service.response.UserResponse;
+import com.example.user.UserResponse;
 import com.example.user_service.service.userServices.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/byLogin/{login}")
-    public ResponseEntity<?> getUserByLogin(@PathVariable("login") String login) {
+    public ResponseEntity<UserResponse> getUserByLogin(@PathVariable("login") String login) {
         try {
             return ResponseEntity.ok(userService.getUserByLogin(login));
         } catch (Exception e) {

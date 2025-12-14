@@ -1,6 +1,6 @@
 package com.example.notification_service.config;
 
-import com.example.notification_service.response.NotificationResponse;
+import com.example.notifcation.NotificationResponse;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,20 +1,21 @@
 package com.example.notification_service.services;
 
-import com.example.notification_service.config.KafkaTopicConfig;
+import com.example.notifcation.NotificationResponse;
 import com.example.notification_service.entity.Notification;
+import com.example.notification_service.entity.NotificationStatus;
 import com.example.notification_service.feign.UserServiceClient;
 import com.example.notification_service.mapper.EntityToResponse;
 import com.example.notification_service.mapper.RequestToEntity;
 import com.example.notification_service.repository.NotificationRepo;
 import com.example.notification_service.request.NotificationRequest;
-import com.example.notification_service.response.NotificationResponse;
-import com.example.notification_service.response.UserResponse;
+import com.example.user.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,7 +27,7 @@ public class NotificationServicesImpl implements NotificationServices {
     private final UserServiceClient userServiceClient;
 
     @Autowired
-    public NotificationServicesImpl(final NotificationRepo notificationRepo, final KafkaTemplate<String, NotificationResponse> kafkaTemplate,  UserServiceClient userServiceClient) {
+    public NotificationServicesImpl(final NotificationRepo notificationRepo, final KafkaTemplate<String, NotificationResponse> kafkaTemplate, UserServiceClient userServiceClient) {
 
         this.notificationRepo = notificationRepo;
         this.kafkaTemplate = kafkaTemplate;
@@ -52,25 +53,35 @@ public class NotificationServicesImpl implements NotificationServices {
     }
 
     @Override
-    public NotificationResponse getNotification(String notificationId) {
+    public NotificationResponse getNotification(Long notificationId) {
         return null;
     }
 
     @Override
-    public void deleteNotification(String notificationId) {
+    public NotificationResponse readNotification(Long notificationId) {
+        Optional<Notification> notification = notificationRepo.findById(notificationId);
+        if (notification.isPresent()) {
+            Notification updatedNotification = notification.get();
+            updatedNotification.setNotificationStatus(NotificationStatus.SEEN);
 
+            return EntityToResponse.convert(notificationRepo.save(updatedNotification));
+        }
+        return NotificationResponse.builder().build();
     }
 
     @Override
-    public void sendNotification(NotificationRequest notificationRequest) {
+    public NotificationResponse sendNotification(NotificationRequest notificationRequest) {
         try {
             NotificationResponse newNotification = addNotification(notificationRequest);
-//            kafkaTemplate.send("user_notification_topic", newNotification);
-
+            kafkaTemplate.send("user_notification_topic", newNotification);
+            return newNotification;
         } catch (Exception e) {
             System.out.println("---------------------------------------------");
             System.out.println("Error while sending notification" + e.getMessage());
             System.out.println("---------------------------------------------");
+            return NotificationResponse.builder()
+                    .message(e.getMessage())
+                    .build();
         }
 
     }

@@ -29,15 +29,14 @@ public class RendezVousServiceImpl implements RendezVousService {
     private final EntityToResponse mapper;
     public final UserFeignClient userFeignClient;
     public final RdvValidations rdvValidations;
+    private final HttpServletRequest httpRequest;
 
-    @Autowired
-    private HttpServletRequest httpRequest;
-
-    public RendezVousServiceImpl(RendezVousRepository rendezVousRepository, EntityToResponse mapper, UserFeignClient userFeignClient, RdvValidations rdvValidations) {
+    public RendezVousServiceImpl(RendezVousRepository rendezVousRepository, EntityToResponse mapper, UserFeignClient userFeignClient, RdvValidations rdvValidations, HttpServletRequest httpRequest) {
         this.rendezVousRepository = rendezVousRepository;
         this.mapper = mapper;
         this.userFeignClient = userFeignClient;
         this.rdvValidations = rdvValidations;
+        this.httpRequest = httpRequest;
     }
 
     @Override

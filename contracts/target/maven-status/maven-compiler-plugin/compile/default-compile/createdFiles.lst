@@ -1,0 +1,5 @@
+com\example\notifcation\NotificationResponse$NotificationResponseBuilder.class
+com\example\notifcation\NotificationResponse.class
+com\example\user\UserResponse$UserResponseBuilder.class
+com\example\user\UserResponse.class
+com\example\App.class

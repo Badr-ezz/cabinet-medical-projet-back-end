@@ -28,6 +28,8 @@ public class Notification {
 
     private NotificationType notificationType;
 
+    private NotificationStatus notificationStatus ;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -35,6 +37,7 @@ public class Notification {
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
+        notificationStatus = NotificationStatus.NOT_SEEN;
     }
 
 
