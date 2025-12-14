@@ -2,7 +2,7 @@ package com.example.user_service.controller;
 
 import com.example.user_service.request.UserRequest;
 import com.example.user_service.response.AuthResponse;
-import com.example.user_service.response.UserResponse;
+import com.example.user.UserResponse;
 import com.example.user_service.service.loginServices.LoginServices;
 import com.example.user_service.service.logoutServices.LogoutServices;
 import com.example.user_service.service.userServices.UserService;

@@ -1,15 +1,12 @@
 package com.example.notification_service.controller;
 
 
+import com.example.notifcation.NotificationResponse;
 import com.example.notification_service.request.NotificationRequest;
-import com.example.notification_service.response.NotificationResponse;
 import com.example.notification_service.services.NotificationServices;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/notification")
@@ -22,13 +19,29 @@ public class NotificationController {
     }
 
 
-    @GetMapping("/send-notification")
-    public ResponseEntity<?> sendNotification(@RequestBody NotificationRequest notificationRequest) {
+    @PostMapping("/send-notification")
+    public ResponseEntity<NotificationResponse> sendNotification(@RequestBody NotificationRequest notificationRequest) {
         try {
-            notificationServices.sendNotification(notificationRequest);
-            return ResponseEntity.ok().body("Notification envoyée avec succes!");
+            NotificationResponse res = notificationServices.sendNotification(notificationRequest);
+            return ResponseEntity.ok().body(res);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(NotificationResponse
+                            .builder()
+                            .message(e.getMessage())
+                            .build());
         }
     }
+
+    @GetMapping("/read-notification/{notId}")
+    public ResponseEntity<NotificationResponse> readNotification(@PathVariable Long notId) {
+
+        try {
+            return ResponseEntity.ok().body(notificationServices.readNotification(notId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(notificationServices.readNotification(notId));
+        }
+    }
+
 }

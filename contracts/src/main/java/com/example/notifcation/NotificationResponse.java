@@ -1,6 +1,5 @@
-package com.example.notification_service.response;
+package com.example.notifcation;
 
-import com.example.notification_service.entity.NotificationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,12 +14,9 @@ import java.time.LocalDateTime;
 public class NotificationResponse {
 
     private Long id;
-
     private Long userId;
-
     private String message;
-
-    private NotificationType notificationType;
-
+    private String notificationType;
+    private String notificationStatus;
     private LocalDateTime createdAt;
 }

@@ -1,7 +1,7 @@
 package com.example.user_service.service.userServices;
 
 import com.example.user_service.request.UserRequest;
-import com.example.user_service.response.UserResponse;
+import com.example.user.UserResponse;
 
 import java.util.List;
 

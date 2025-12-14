@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/notification/send-notification").permitAll()
+                        .requestMatchers("/api/notification/read-notification/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

@@ -8,7 +8,7 @@ import com.example.user_service.mapper.ReqToEntity;
 import com.example.user_service.repository.UserRepo;
 import com.example.user_service.request.UserRequest;
 import com.example.user_service.response.AuthResponse;
-import com.example.user_service.response.UserResponse;
+import com.example.user.UserResponse;
 import com.example.user_service.service.jwtServices.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

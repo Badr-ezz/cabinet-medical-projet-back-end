@@ -118,6 +118,14 @@
 		</dependency>
 
 
+<!-- dependencies for the contract jar file that contains the dtos model -->
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>contracts</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<dependencyManagement>

@@ -22,12 +22,8 @@ import lombok.NoArgsConstructor;
 public class AuthResponse {
 
     private String token;
-
-    // Utiliser "tokenExpired" au lieu de "isTokenExpired"
-    // pour éviter les problèmes de sérialisation Jackson
-    @JsonProperty("tokenExpired")
-    private boolean tokenExpired;
-
+    private boolean isTokenExpired;
     private String error;
     private String userRole;
+
 }
