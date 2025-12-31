@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletRequest;
 import ma.cabinet.rendezvous_service.enums.StatutRDV;
 import ma.cabinet.rendezvous_service.feign.UserFeignClient;
-import ma.cabinet.rendezvous_service.response.AuthResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +16,6 @@ import ma.cabinet.rendezvous_service.mapper.EntityToResponse;
 import ma.cabinet.rendezvous_service.repository.RendezVousRepository;
 import ma.cabinet.rendezvous_service.request.RendezVousRequest;
 import ma.cabinet.rendezvous_service.response.RendezVousResponse;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Service
 @Transactional
@@ -70,7 +66,22 @@ public class RendezVousServiceImpl implements RendezVousService {
         RendezVous rdv = rendezVousRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rendez-vous introuvable avec id=" + id));
 
+        if (!rdvValidations.validateRendezVousRequest(request)) {
+            throw new IllegalArgumentException("Données du rendez-vous invalides");
+        }
+
+        // Validation Cabinet
+        if (!rdvValidations.isCabinetIdValid(request.getCabinetId())) {
+            throw new IllegalArgumentException("Cabinet inexistant: " + request.getCabinetId());
+        }
+
+        // Validation Patient
+        if (!rdvValidations.isPatientExists(request.getPatientId())) {
+            throw new IllegalArgumentException("Patient inexistant: " + request.getPatientId());
+        }
+
         EntityToRequest.updateEntityFromRequest(rdv, request);
+
         RendezVous updated = rendezVousRepository.save(rdv);
         return mapper.toResponse(updated);
     }

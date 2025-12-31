@@ -1,8 +1,8 @@
 package ma.cabinet.rendezvous_service.security;
 
+import com.example.auth.AuthResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ma.cabinet.rendezvous_service.response.AuthResponse;
 import ma.cabinet.rendezvous_service.service.RdvValidations;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;

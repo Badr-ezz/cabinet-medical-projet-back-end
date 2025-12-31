@@ -3,8 +3,8 @@ package ma.cabinet.rendezvous_service.service;
 import ma.cabinet.rendezvous_service.feign.UserFeignClient;
 import ma.cabinet.rendezvous_service.repository.RendezVousRepository;
 import ma.cabinet.rendezvous_service.request.RendezVousRequest;
-import ma.cabinet.rendezvous_service.response.AuthResponse;
 import org.springframework.stereotype.Component;
+import com.example.auth.AuthResponse;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

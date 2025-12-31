@@ -1,5 +1,7 @@
+com\example\auth\AuthResponse$AuthResponseBuilder.class
+com\example\user\UserResponse$UserResponseBuilder.class
+com\example\auth\AuthResponse.class
+com\example\App.class
 com\example\notifcation\NotificationResponse$NotificationResponseBuilder.class
 com\example\notifcation\NotificationResponse.class
-com\example\user\UserResponse$UserResponseBuilder.class
 com\example\user\UserResponse.class
-com\example\App.class
