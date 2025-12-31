@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -22,7 +23,7 @@ public class AuthController {
     private final LogoutServices logoutServices;
 
     @Autowired
-    public AuthController(UserService userService, LoginServices loginServices, LogoutServices logoutServices) {
+    public AuthController(LoginServices loginServices, LogoutServices logoutServices) {
         this.loginServices = loginServices;
         this.logoutServices = logoutServices;
     }
