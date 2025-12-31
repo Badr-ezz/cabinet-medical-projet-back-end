@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletRequest;
 import ma.cabinet.rendezvous_service.enums.StatutRDV;
 import ma.cabinet.rendezvous_service.feign.UserFeignClient;
+import ma.cabinet.rendezvous_service.response.AuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,22 +41,26 @@ public class RendezVousServiceImpl implements RendezVousService {
 
     @Override
     public RendezVousResponse createRendezVous(RendezVousRequest request) {
-        try{
-            if(rdvValidations.isTokenValid(httpRequest.getHeader("Authorization"))){
-                if(rdvValidations.validateRendezVousRequest(request)){
-                    if(rdvValidations.isCabinetIdValid(request.getCabinetId())){
-                        if (rdvValidations.ispatientExists(request.getPatientId())) {
-                            RendezVous rdv = EntityToRequest.toEntity(request);
-                            RendezVous saved = rendezVousRepository.save(rdv);
-                            return mapper.toResponse(saved);
-                        }
-                    }
-                }
-            }
-            return null;
-        } catch (Exception e){
-            throw new RuntimeException("Erreur lors de la création du rendez-vous: " + e.getMessage());
+        // Validation données RDV
+        if (!rdvValidations.validateRendezVousRequest(request)) {
+            throw new IllegalArgumentException("Données du rendez-vous invalides");
         }
+
+        // Validation Cabinet
+        if (!rdvValidations.isCabinetIdValid(request.getCabinetId())) {
+            throw new IllegalArgumentException("Cabinet inexistant: " + request.getCabinetId());
+        }
+
+        // Validation Patient
+        if (!rdvValidations.isPatientExists(request.getPatientId())) {
+            throw new IllegalArgumentException("Patient inexistant: " + request.getPatientId());
+        }
+
+        // Création
+        RendezVous rdv = EntityToRequest.toEntity(request);
+        RendezVous saved = rendezVousRepository.save(rdv);
+
+        return mapper.toResponse(saved);
     }
 
 
