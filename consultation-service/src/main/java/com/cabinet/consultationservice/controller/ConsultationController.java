@@ -2,6 +2,7 @@ package com.cabinet.consultationservice.controller;
 
 import com.cabinet.consultationservice.dto.ConsultationRequestDTO;
 import com.cabinet.consultationservice.dto.ConsultationResponseDTO;
+import com.cabinet.consultationservice.dto.ConsultationWithPatientDataDTO;
 import com.cabinet.consultationservice.service.ConsultationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -81,6 +82,32 @@ public class ConsultationController {
             @Parameter(description = "Consultation ID", required = true, example = "1")
             @PathVariable Long id) {
         return ResponseEntity.ok(consultationService.getConsultationById(id));
+    }
+
+    @GetMapping("/{id}/with-patient-data")
+    @Operation(
+            summary = "Get consultation with patient and dossier médical data",
+            description = "Retrieves a consultation with enriched patient information and medical dossier (dossier médical) including allergies, medical history, and treatments."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Consultation with patient data found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ConsultationWithPatientDataDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Consultation not found",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    public ResponseEntity<ConsultationWithPatientDataDTO> getConsultationWithPatientData(
+            @Parameter(description = "Consultation ID", required = true, example = "1")
+            @PathVariable Long id) {
+        return ResponseEntity.ok(consultationService.getConsultationWithPatientData(id));
     }
 
     @GetMapping("/patient/{patientId}")
