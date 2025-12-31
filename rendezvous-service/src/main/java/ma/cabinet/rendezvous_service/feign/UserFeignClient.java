@@ -17,3 +17,4 @@ public interface UserFeignClient {
     @GetMapping("/api/auth/validate-token")
     AuthResponse validateToken(@RequestParam("token") String token);
 }
+
