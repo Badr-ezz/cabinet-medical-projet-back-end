@@ -16,7 +16,4 @@ public class NotificationListener {
         System.out.println("RECEIVED: " + message);
     }
 
-
-
-
 }
