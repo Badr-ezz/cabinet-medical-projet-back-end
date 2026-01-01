@@ -27,7 +27,7 @@ public class RendezVousController {
      * Autorisé: SECRETARY, ADMIN
      */
     @PostMapping
-    @RequireRole({"SECRETARY", "ADMIN"})
+    @RequireRole({"SECRETARY"})
     public ResponseEntity<RendezVousResponse> create(@Valid @RequestBody RendezVousRequest request) {
         RendezVousResponse response = rendezVousService.createRendezVous(request);
         return ResponseEntity.ok(response);

@@ -1,5 +1,7 @@
 package ma.cabinet.rendezvous_service.service;
 
+import com.example.patient.PatientResponseDTO;
+import ma.cabinet.rendezvous_service.feign.PatientFeignClient;
 import ma.cabinet.rendezvous_service.feign.UserFeignClient;
 import ma.cabinet.rendezvous_service.repository.RendezVousRepository;
 import ma.cabinet.rendezvous_service.request.RendezVousRequest;
@@ -14,11 +16,13 @@ public class RdvValidations {
 
     private final RendezVousRepository rendezVousRepository;
     private final UserFeignClient userFeignClient;
+    private final PatientFeignClient patientFeignClient;
 
     public RdvValidations(RendezVousRepository rendezVousRepository,
-                          UserFeignClient userFeignClient) {
+                          UserFeignClient userFeignClient, PatientFeignClient patientFeignClient) {
         this.rendezVousRepository = rendezVousRepository;
         this.userFeignClient = userFeignClient;
+        this.patientFeignClient = patientFeignClient;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -157,24 +161,24 @@ public class RdvValidations {
     // ═══════════════════════════════════════════════════════════════
 
     public boolean isPatientExists(Long patientId) {
-        // TODO: Implémenter quand Patient-Service sera prêt
-        // Pour l'instant, toujours true
+
         if (patientId == null) {
             System.err.println("❌ PatientId null");
             return false;
         }
 
-        System.out.println("⚠️ Validation Patient temporaire (toujours true)");
-        return true;
+        System.out.println("⚠️ Validation Patient :");
 
-        // Future implémentation :
-        // try {
-        //     patientFeignClient.getPatient(patientId);
-        //     return true;
-        // } catch (Exception e) {
-        //     System.err.println("❌ Patient inexistant: " + patientId);
-        //     return false;
-        // }
+         try {
+             PatientResponseDTO patientResponseDTO = patientFeignClient.getPatientById(patientId);
+             if(patientResponseDTO.getId() == null) {
+                 return false;
+             }
+             return true;
+         } catch (Exception e) {
+             System.err.println("❌ Patient inexistant: " + patientId);
+             return false;
+         }
     }
 
     // ═══════════════════════════════════════════════════════════════

@@ -5,3 +5,4 @@ com\example\App.class
 com\example\notifcation\NotificationResponse$NotificationResponseBuilder.class
 com\example\notifcation\NotificationResponse.class
 com\example\user\UserResponse.class
+com\example\patient\PatientResponseDTO.class

@@ -1,8 +1,8 @@
 package com.cabinet.patientservice.mapper;
 
 import com.cabinet.patientservice.dto.PatientRequestDTO;
-import com.cabinet.patientservice.dto.PatientResponseDTO;
 import com.cabinet.patientservice.model.Patient;
+import com.example.patient.PatientResponseDTO;
 
 public class PatientMapper {
 

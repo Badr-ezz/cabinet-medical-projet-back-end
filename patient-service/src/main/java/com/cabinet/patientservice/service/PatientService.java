@@ -1,7 +1,7 @@
 package com.cabinet.patientservice.service;
 
 import com.cabinet.patientservice.dto.PatientRequestDTO;
-import com.cabinet.patientservice.dto.PatientResponseDTO;
+import com.example.patient.PatientResponseDTO;
 
 import java.util.List;
 

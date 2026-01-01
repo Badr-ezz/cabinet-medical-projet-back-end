@@ -1,7 +1,6 @@
 package com.cabinet.patientservice.service.impl;
 
 import com.cabinet.patientservice.dto.PatientRequestDTO;
-import com.cabinet.patientservice.dto.PatientResponseDTO;
 import com.cabinet.patientservice.exception.DuplicateResourceException;
 import com.cabinet.patientservice.exception.ResourceNotFoundException;
 import com.cabinet.patientservice.mapper.PatientMapper;
@@ -10,6 +9,7 @@ import com.cabinet.patientservice.model.Patient;
 import com.cabinet.patientservice.repository.DossierMedicalRepository;
 import com.cabinet.patientservice.repository.PatientRepository;
 import com.cabinet.patientservice.service.PatientService;
+import com.example.patient.PatientResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
