@@ -15,6 +15,6 @@ import com.example.patient.PatientResponseDTO;
 @FeignClient(name = "patient-service",configuration = FeignClientProperties.FeignClientConfiguration.class)
 public interface PatientFeignClient {
 
-    @GetMapping("/{id}")
-    PatientResponseDTO getPatientById(Long id);
+    @GetMapping("/api/patients/{id}")
+    PatientResponseDTO getPatientById(@PathVariable Long id);
 }

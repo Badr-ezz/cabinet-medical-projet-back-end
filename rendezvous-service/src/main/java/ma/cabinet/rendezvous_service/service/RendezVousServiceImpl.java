@@ -240,6 +240,8 @@ public class RendezVousServiceImpl implements RendezVousService {
                 .toList();
     }
 
+    
+
 
 
 

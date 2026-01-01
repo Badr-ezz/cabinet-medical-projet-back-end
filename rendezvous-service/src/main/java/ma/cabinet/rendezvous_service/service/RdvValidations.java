@@ -1,6 +1,7 @@
 package ma.cabinet.rendezvous_service.service;
 
 import com.example.patient.PatientResponseDTO;
+import lombok.extern.slf4j.Slf4j;
 import ma.cabinet.rendezvous_service.feign.PatientFeignClient;
 import ma.cabinet.rendezvous_service.feign.UserFeignClient;
 import ma.cabinet.rendezvous_service.repository.RendezVousRepository;
@@ -11,6 +12,7 @@ import com.example.auth.AuthResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Slf4j
 @Component
 public class RdvValidations {
 
@@ -171,11 +173,13 @@ public class RdvValidations {
 
          try {
              PatientResponseDTO patientResponseDTO = patientFeignClient.getPatientById(patientId);
+             log.info(patientResponseDTO.toString());
              if(patientResponseDTO.getId() == null) {
                  return false;
              }
              return true;
          } catch (Exception e) {
+             e.printStackTrace();
              System.err.println("❌ Patient inexistant: " + patientId);
              return false;
          }
