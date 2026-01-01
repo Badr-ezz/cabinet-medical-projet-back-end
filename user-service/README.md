@@ -1,29 +1,562 @@
-# User Service
+# User Service - API Documentation
 
-A Spring Boot microservice responsible for user management and authentication in the Cabinet Medical application.
+A Spring Boot microservice for user management and authentication in the Cabinet Medical application.
 
-## 📋 Overview
+---
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Base URL](#base-url)
+- [Authentication Flow](#authentication-flow)
+- [API Endpoints](#api-endpoints)
+  - [Authentication](#authentication-endpoints)
+  - [User Management](#user-management-endpoints)
+- [Data Models](#data-models)
+- [Error Handling](#error-handling)
+- [Token Management](#token-management)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start-for-backend)
+
+---
+
+## 🎯 Overview
 
 This service handles:
-- User registration and authentication
-- JWT token generation and validation
-- User CRUD operations
-- Role-based access control
+- ✅ User registration and login
+- ✅ JWT token generation and validation
+- ✅ User CRUD operations
+- ✅ Role-based access control (MEDECIN, ADMIN, SECRETARY)
+- ✅ Token logout/invalidation
 
-## 🛠️ Tech Stack
+---
 
-| Technology | Version |
-|------------|---------|
-| Java | 21 |
-| Spring Boot | 4.0.0 |
-| Spring Security | - |
-| Spring Data JPA | - |
-| Spring Cloud (Eureka Client) | 2025.1.0 |
-| Spring Cloud OpenFeign | - |
-| Apache Kafka | - |
-| PostgreSQL | - |
-| JWT (jjwt) | 0.11.5 |
-| Lombok | - |
+## 🌐 Base URL
+
+```
+http://localhost:8081
+```
+
+---
+
+## 🔐 Authentication Flow
+
+### Login Flow
+
+```
+┌─────────┐          ┌──────────────┐          ┌──────────┐
+│ Frontend│          │ User Service │          │ Database │
+└────┬────┘          └──────┬───────┘          └────┬─────┘
+     │                      │                       │
+     │  POST /api/auth/login│                       │
+     │  {login, pwd}        │                       │
+     │─────────────────────>│                       │
+     │                      │  Validate credentials │
+     │                      │──────────────────────>│
+     │                      │                       │
+     │                      │<──────────────────────│
+     │    JWT Token         │                       │
+     │<─────────────────────│                       │
+     │                      │                       │
+     │  Store token locally │                       │
+     │                      │                       │
+```
+
+### Protected Request Flow
+
+```
+┌─────────┐                      ┌──────────────┐
+│ Frontend│                      │ User Service │
+└────┬────┘                      └──────┬───────┘
+     │                                  │
+     │  GET /api/users                  │
+     │  Header: Authorization: Bearer <token>
+     │─────────────────────────────────>│
+     │                                  │
+     │  ✅ Valid token → Data           │
+     │  ❌ Invalid/Expired → 401        │
+     │<─────────────────────────────────│
+     │                                  │
+```
+
+---
+
+## 📡 API Endpoints
+
+### Authentication Endpoints
+
+#### 1. Login
+
+Authenticate a user and receive a JWT token.
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/auth/login` |
+| **Method** | `POST` |
+| **Auth Required** | ❌ No |
+| **Content-Type** | `application/json` |
+
+**Request Body:**
+```json
+{
+  "login": "user@example.com",
+  "pwd": "password123"
+}
+```
+
+**Success Response (200 OK):**
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwicm9sZXMiOiJNRURFQ0lOIiwiaWQiOjEsImlhdCI6MTcwNDEwMjQwMCwiZXhwIjoxNzA0MTg4ODAwfQ.xxx
+```
+
+**Error Response (401 Unauthorized):**
+```json
+{
+  "message": "Login ou mot de passe incorrect",
+  "status": "UNAUTHORIZED",
+  "code": "ERR_INVALID_CREDENTIALS"
+}
+```
+
+---
+
+#### 2. Register
+
+Create a new user account.
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/auth/register` |
+| **Method** | `POST` |
+| **Auth Required** | ❌ No |
+| **Content-Type** | `application/json` |
+
+**Request Body:**
+```json
+{
+  "login": "newuser@example.com",
+  "pwd": "password123",
+  "nom": "Dupont",
+  "prenom": "Jean",
+  "numTel": "+212612345678",
+  "signature": "/signatures/jean_dupont.png",
+  "role": "MEDECIN"
+}
+```
+
+**Success Response (201 Created):**
+```json
+{
+  "id": 1,
+  "login": "newuser@example.com",
+  "nom": "Dupont",
+  "prenom": "Jean",
+  "numTel": "+212612345678",
+  "signature": "/signatures/jean_dupont.png",
+  "role": "MEDECIN"
+}
+```
+
+**Error Response (409 Conflict):**
+```json
+{
+  "message": "Utilisateur déjà existant",
+  "status": "CONFLICT",
+  "code": "ERR_EMAIL_EXISTS"
+}
+```
+
+---
+
+#### 3. Validate Token
+
+Check if a JWT token is still valid.
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/auth/validate-token` |
+| **Method** | `GET` |
+| **Auth Required** | ❌ No |
+| **Query Params** | `token` |
+
+**Request:**
+```
+GET /api/auth/validate-token?token=eyJhbGciOiJIUzI1NiIs...
+```
+
+**Success Response - Valid Token (200 OK):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "isTokenExpired": false,
+  "error": null,
+  "userRole": "MEDECIN"
+}
+```
+
+**Response - Expired Token (200 OK):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "isTokenExpired": true,
+  "error": "Token expiré",
+  "userRole": null
+}
+```
+
+---
+
+#### 4. Logout
+
+Invalidate a JWT token (adds to blacklist).
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/auth/logout` |
+| **Method** | `POST` |
+| **Auth Required** | ✅ Yes (Bearer Token) |
+
+**Request Headers:**
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+```
+
+**Success Response (200 OK):**
+```
+(empty body)
+```
+
+**Error Response (400 Bad Request):**
+```
+(missing or malformed Authorization header)
+```
+
+---
+
+### User Management Endpoints
+
+> ⚠️ **Note:** These endpoints are currently public (`/api/users/**`), but they should be protected in production.
+
+#### 1. Get All Users
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/users` |
+| **Method** | `GET` |
+| **Auth Required** | ❌ No (currently public) |
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "id": 1,
+    "login": "doctor@example.com",
+    "nom": "Martin",
+    "prenom": "Pierre",
+    "numTel": "+212612345678",
+    "signature": "/signatures/pierre_martin.png",
+    "role": "MEDECIN"
+  },
+  {
+    "id": 2,
+    "login": "admin@example.com",
+    "nom": "Dubois",
+    "prenom": "Marie",
+    "numTel": "+212698765432",
+    "signature": null,
+    "role": "ADMIN"
+  }
+]
+```
+
+---
+
+#### 2. Get User by ID
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/users/{id}` |
+| **Method** | `GET` |
+| **Auth Required** | ❌ No (currently public) |
+
+**Success Response (200 OK):**
+```json
+{
+  "id": 1,
+  "login": "doctor@example.com",
+  "nom": "Martin",
+  "prenom": "Pierre",
+  "numTel": "+212612345678",
+  "signature": "/signatures/pierre_martin.png",
+  "role": "MEDECIN"
+}
+```
+
+---
+
+#### 3. Get User by Login
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/users/byLogin/{login}` |
+| **Method** | `GET` |
+| **Auth Required** | ❌ No (currently public) |
+
+**Success Response (200 OK):**
+```json
+{
+  "id": 1,
+  "login": "doctor@example.com",
+  "nom": "Martin",
+  "prenom": "Pierre",
+  "numTel": "+212612345678",
+  "signature": "/signatures/pierre_martin.png",
+  "role": "MEDECIN"
+}
+```
+
+---
+
+#### 4. Create User
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/users` |
+| **Method** | `POST` |
+| **Auth Required** | ❌ No (currently public) |
+| **Content-Type** | `application/json` |
+
+**Request Body:**
+```json
+{
+  "login": "newdoctor@example.com",
+  "pwd": "securePassword123",
+  "nom": "Leroy",
+  "prenom": "Sophie",
+  "numTel": "+212611223344",
+  "signature": "/signatures/sophie_leroy.png",
+  "role": "MEDECIN"
+}
+```
+
+**Success Response (201 Created):**
+```json
+{
+  "id": 3,
+  "login": "newdoctor@example.com",
+  "nom": "Leroy",
+  "prenom": "Sophie",
+  "numTel": "+212611223344",
+  "signature": "/signatures/sophie_leroy.png",
+  "role": "MEDECIN"
+}
+```
+
+---
+
+#### 5. Update User
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/users` |
+| **Method** | `PUT` |
+| **Auth Required** | ❌ No (currently public) |
+| **Content-Type** | `application/json` |
+
+**Request Body:**
+```json
+{
+  "id": 1,
+  "login": "doctor@example.com",
+  "pwd": "newPassword123",
+  "nom": "Martin",
+  "prenom": "Pierre-Louis",
+  "numTel": "+212612345679",
+  "signature": "/signatures/pierre_martin_v2.png",
+  "role": "MEDECIN"
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "id": 1,
+  "login": "doctor@example.com",
+  "nom": "Martin",
+  "prenom": "Pierre-Louis",
+  "numTel": "+212612345679",
+  "signature": "/signatures/pierre_martin_v2.png",
+  "role": "MEDECIN"
+}
+```
+
+---
+
+#### 6. Delete User
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/users/{id}` |
+| **Method** | `DELETE` |
+| **Auth Required** | ❌ No (currently public) |
+
+**Success Response (204 No Content):**
+```
+(empty body)
+```
+
+---
+
+## 📦 Data Models
+
+### User Roles
+
+| Role | Description |
+|------|-------------|
+| `MEDECIN` | Medical doctor - can access patient records |
+| `ADMIN` | Administrator - full system access |
+| `SECRETARY` | Secretary - limited access for scheduling |
+
+### Request DTOs
+
+#### UserRequest
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | Long | No (Yes for updates) | User ID |
+| `login` | String | Yes | Email or username |
+| `pwd` | String | Yes | Password (plain text, will be encrypted) |
+| `nom` | String | Yes | Last name |
+| `prenom` | String | Yes | First name |
+| `signature` | String | No | Path to signature image |
+| `numTel` | String | Yes | Phone number |
+| `role` | UserRole | Yes | MEDECIN, ADMIN, or SECRETARY |
+
+**Example:**
+```json
+{
+  "id": 1,
+  "login": "user@example.com",
+  "pwd": "password123",
+  "nom": "Dupont",
+  "prenom": "Jean",
+  "signature": "/signatures/jean_dupont.png",
+  "numTel": "+212612345678",
+  "role": "MEDECIN"
+}
+```
+
+### Response DTOs
+
+#### UserResponse
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | Long | User ID |
+| `login` | String | Email or username |
+| `nom` | String | Last name |
+| `prenom` | String | First name |
+| `numTel` | String | Phone number |
+| `signature` | String | Path to signature image (nullable) |
+| `role` | String | User role |
+
+**Example:**
+```json
+{
+  "id": 1,
+  "login": "user@example.com",
+  "nom": "Dupont",
+  "prenom": "Jean",
+  "numTel": "+212612345678",
+  "signature": "/signatures/jean_dupont.png",
+  "role": "MEDECIN"
+}
+```
+
+#### AuthResponse
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `token` | String | JWT token |
+| `isTokenExpired` | boolean | Whether the token is expired |
+| `error` | String | Error message (nullable) |
+| `userRole` | String | User role from token (nullable) |
+
+**Example:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "isTokenExpired": false,
+  "error": null,
+  "userRole": "MEDECIN"
+}
+```
+
+---
+
+## ⚠️ Error Handling
+
+### Error Response Format
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `message` | String | Error message |
+| `status` | String | HTTP status name |
+| `code` | String | Error code |
+
+**Example:**
+```json
+{
+  "message": "Login ou mot de passe incorrect",
+  "status": "UNAUTHORIZED",
+  "code": "ERR_INVALID_CREDENTIALS"
+}
+```
+
+### Common Error Codes
+
+| HTTP Status | Code | Message | Description |
+|-------------|------|---------|-------------|
+| 401 | `ERR_INVALID_CREDENTIALS` | Login ou mot de passe incorrect | Wrong username or password |
+| 401 | - | Token invalidé (blacklist) | Token has been logged out |
+| 401 | - | Invalid JWT token | Malformed or tampered token |
+| 404 | `ERR_USER_NOT_FOUND` | Utilisateur introuvable | User doesn't exist |
+| 409 | `ERR_EMAIL_EXISTS` | Utilisateur déjà existant | Email already registered |
+
+---
+
+## 🔑 Token Management
+
+### JWT Token Structure
+
+The JWT token contains the following claims:
+
+```json
+{
+  "sub": "user@example.com",    // Username (subject)
+  "roles": "MEDECIN",           // User role
+  "id": 1,                      // User ID
+  "iat": 1704102400,            // Issued at (timestamp)
+  "exp": 1704188800             // Expiration (timestamp)
+}
+```
+
+### Token Expiration
+
+- **Default expiration**: 24 hours (86400000 ms)
+- When token expires, API returns 401 Unauthorized
+- Frontend should redirect to login page
+
+### Token Storage Recommendations
+
+| Storage | Pros | Cons | Recommended For |
+|---------|------|------|-----------------|
+| `localStorage` | Persists across sessions | XSS vulnerable | Simple SPAs |
+| `sessionStorage` | Auto-clears on tab close | XSS vulnerable | Sensitive apps |
+| `HttpOnly Cookie` | XSS protected | CSRF vulnerable | High security |
+
+---
 
 ## 🏗️ Architecture
 
@@ -45,10 +578,6 @@ com.example.user_service
 ├── mapper/                    # DTO mappers
 │   ├── EntityToRes.java
 │   └── ReqToEntity.java
-├── notificationEvent/         # Kafka notification events
-│   ├── NotificationListener.java
-│   ├── NotificationMessage.java
-│   └── NotificationType.java
 ├── repository/                # Data access layer
 │   └── UserRepo.java
 ├── request/                   # Request DTOs
@@ -58,227 +587,52 @@ com.example.user_service
 ├── service/                   # Business logic
 │   ├── jwtServices/
 │   │   ├── JwtUtils.java
-│   │   ├── TokenBlacklistService.java
-│   │   └── UserDetailsServiceImpl.java
+│   │   └── TokenBlacklistService.java
 │   ├── loginServices/
-│   │   └── LoginServices.java
+│   │   ├── LoginServices.java
+│   │   └── LoginServicesImpl.java
 │   ├── logoutServices/
-│   │   └── LogoutServices.java
+│   │   ├── LogoutServices.java
+│   │   └── LogoutServicesImpl.java
 │   └── userServices/
 │       ├── UserService.java
 │       └── UserServiceImpl.java
 └── UserServiceApplication.java
 ```
 
-## 📦 Entity
+---
 
-### User
+## 🛠️ Tech Stack
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | Long | Primary key (auto-generated) |
-| `login` | String | Unique username |
-| `pwd` | String | Password (encrypted) |
-| `nom` | String | Last name |
-| `prenom` | String | First name |
-| `signature` | String | Unique image path to user signature |
-| `numTel` | String | Unique phone number |
-| `role` | UserRole | User role (enum) |
+| Technology | Version |
+|------------|---------|
+| Java | 21 |
+| Spring Boot | 4.0.0 |
+| Spring Security | - |
+| Spring Data JPA | - |
+| PostgreSQL | - |
+| JWT (jjwt) | 0.11.5 |
+| Lombok | - |
 
-### UserRole (Enum)
+---
 
-| Value | Description |
-|-------|-------------|
-| `MEDECIN` | Medical doctor |
-| `ADMIN` | Administrator |
-| `SECRETARY` | Secretary |
-
-## 📨 DTOs
-
-### Request DTOs
-
-#### UserRequest
-
-Used for user creation, update, and login operations.
-
-```java
-{
-    "id": Long,           // Optional (for updates)
-    "login": String,
-    "pwd": String,
-    "nom": String,
-    "prenom": String,
-    "signature": String,
-    "numTel": String,
-    "role": UserRole      // MEDECIN, ADMIN, or SECRETARY
-}
-```
-
-### Response DTOs
-
-#### UserResponse
-
-Returned from user operations (from contracts library).
-
-```java
-{
-    "id": Long,
-    "login": String,
-    "nom": String,
-    "prenom": String,
-    "numTel": String,
-    "signature": String,
-    "role": String
-}
-```
-
-#### AuthResponse
-
-Returned from token validation endpoint.
-
-```java
-{
-    "token": String,
-    "isTokenExpired": boolean,
-    "error": String,
-    "userRole": String
-}
-```
-
-## 🔌 API Endpoints
-
-### Authentication Controller (`/api/auth`)
-
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| `POST` | `/login` | Authenticate user | `UserRequest` | JWT Token (String) |
-| `POST` | `/register` | Register new user | `UserRequest` | `UserResponse` |
-| `GET` | `/validate-token` | Validate JWT token | Query param: `token` | `AuthResponse` |
-
-### User Controller (`/api/users`)
-
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| `POST` | `/` | Create new user | `UserRequest` | `UserResponse` |
-| `GET` | `/` | Get all users | - | `List<UserResponse>` |
-| `GET` | `/{id}` | Get user by ID | - | `UserResponse` |
-| `GET` | `/byLogin/{login}` | Get user by login | - | `UserResponse` |
-| `PUT` | `/` | Update user | `UserRequest` | `UserResponse` |
-| `DELETE` | `/{id}` | Delete user by ID | - | `204 No Content` |
-
-## 🔐 Security
-
-### JWT Configuration
-
-The service uses JWT (JSON Web Tokens) for stateless authentication:
-
-- **Token Expiration**: 24 hours (86400000 ms)
-- **Algorithm**: HS256
-- **Token Claims**:
-  - `sub` (subject): Username
-  - `roles`: User roles
-  - `id`: User ID
-  - `iat`: Issued at timestamp
-  - `exp`: Expiration timestamp
-
-### Public Endpoints
-
-The following endpoints are publicly accessible without authentication:
-
-- `POST /api/auth/login`
-- `POST /api/auth/register`
-- `GET /api/auth/validate-token`
-- `/api/users/**`
-
-All other endpoints require a valid JWT token.
-
-## 📡 Kafka Integration
-
-The service integrates with Apache Kafka for event-driven notifications.
-
-### Notification Events
-
-#### NotificationType (Enum)
-
-| Value | Description |
-|-------|-------------|
-| `INFO` | Informational notification |
-| `ALERT` | Alert notification |
-
-#### NotificationMessage
-
-```java
-{
-    "id": Long,
-    "userId": Long,
-    "message": String,
-    "notificationType": NotificationType,
-    "createdAt": LocalDateTime
-}
-```
-
-## ☁️ Service Discovery
-
-This service is registered with **Netflix Eureka** for service discovery in a microservices architecture.
-
-## ⚙️ Configuration
-
-### Application Properties
-
-| Property | Value | Description |
-|----------|-------|-------------|
-| `server.port` | 8081 | Service port |
-| `spring.application.name` | user-service | Service name |
-| `spring.datasource.url` | jdbc:postgresql://localhost:5432/cabinet-medical | Database URL |
-| `spring.kafka.bootstrap-servers` | localhost:9092 | Kafka broker |
-| `jwt.expirationMs` | 86400000 | JWT token expiration (24h) |
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Java 21
-- PostgreSQL
-- Apache Kafka
-- Maven
-
-### Running the Service
+## 🚀 Quick Start for Backend
 
 ```bash
-# Clone the repository
-git clone <repository-url>
+# Prerequisites: Java 21, PostgreSQL, Maven
 
-# Navigate to the service directory
-cd user-service
-
-# Build the project
-./mvnw clean install
+# Create database
+psql -U postgres -c "CREATE DATABASE \"cabinet-medical\";"
 
 # Run the service
 ./mvnw spring-boot:run
 ```
 
-### Database Setup
+The service will be available at `http://localhost:8081`
 
-Ensure PostgreSQL is running and create the database:
+---
 
-```sql
-CREATE DATABASE "cabinet-medical";
-```
+## 📞 Support
 
-The service uses `hibernate.ddl-auto=update`, so tables will be created automatically.
-
-## 📚 Dependencies
-
-This service depends on:
-
-- **contracts** (`com.example:contracts:1.0-SNAPSHOT`): Shared DTOs library containing `UserResponse` and other shared models
-
-## 🔗 Related Services
-
-This user-service is part of the Cabinet Medical microservices architecture and communicates with other services via:
-
-- **Eureka Server**: Service registration and discovery
-- **Kafka**: Event-driven communication for notifications
-- **OpenFeign**: Inter-service REST communication
+For questions or issues, please contact the backend team.
 
