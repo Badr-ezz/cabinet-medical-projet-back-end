@@ -13,6 +13,7 @@ public class ReqToEntity {
     public static User convertUserRequestToUser(UserRequest userReq) {
         return User.builder()
                 .id(userReq.getId())
+                .cabinetId(userReq.getCabinetId())
                 .login(userReq.getLogin())
                 .pwd(userReq.getPwd())
                 .nom(userReq.getNom())

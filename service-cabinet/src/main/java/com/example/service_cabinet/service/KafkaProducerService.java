@@ -2,10 +2,12 @@ package com.example.service_cabinet.service;
 
 import com.example.service_cabinet.entity.Cabinet;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@ConditionalOnProperty(name = "spring.kafka.enabled", havingValue = "true", matchIfMissing = false)
 public class KafkaProducerService {
 
     private final KafkaTemplate<String, String> kafkaTemplate;

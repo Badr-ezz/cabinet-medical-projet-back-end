@@ -25,6 +25,8 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long cabinetId;
+
     @Column(nullable = false, unique = true, length = 50)
     private String cin;
 

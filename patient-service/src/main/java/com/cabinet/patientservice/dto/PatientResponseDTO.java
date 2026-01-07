@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public class PatientResponseDTO {
 
     private Long id;
+    private Long cabinetId;
     private String cin;
     private String nom;
     private String prenom;

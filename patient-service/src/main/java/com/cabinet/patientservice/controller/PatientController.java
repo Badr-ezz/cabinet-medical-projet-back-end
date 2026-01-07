@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/patients")
+@CrossOrigin("*")
 public class PatientController {
 
     private final PatientService patientService;
@@ -29,6 +30,11 @@ public class PatientController {
     @GetMapping
     public ResponseEntity<List<PatientResponseDTO>> getAllPatients() {
         return ResponseEntity.ok(patientService.getAllPatients());
+    }
+
+    @GetMapping("/by-cabinet/{cabinetId}")
+    public ResponseEntity<List<PatientResponseDTO>> getPatientsByCabinetId(@PathVariable Long cabinetId) {
+        return ResponseEntity.ok(patientService.getPatientsByCabinetId(cabinetId));
     }
 
     @GetMapping("/{id}")

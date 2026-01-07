@@ -135,12 +135,13 @@ Create a new user account.
 **Request Body:**
 ```json
 {
+  "cabinetId": 1,
   "login": "newuser@example.com",
   "pwd": "password123",
   "nom": "Dupont",
   "prenom": "Jean",
-  "numTel": "+212612345678",
   "signature": "/signatures/jean_dupont.png",
+  "numTel": "+212612345678",
   "role": "MEDECIN"
 }
 ```
@@ -149,11 +150,13 @@ Create a new user account.
 ```json
 {
   "id": 1,
+  "cabinetId": 1,
+  "nomCabinet": null,
   "login": "newuser@example.com",
   "nom": "Dupont",
   "prenom": "Jean",
-  "numTel": "+212612345678",
   "signature": "/signatures/jean_dupont.png",
+  "numTel": "+212612345678",
   "role": "MEDECIN"
 }
 ```
@@ -251,20 +254,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 [
   {
     "id": 1,
+    "cabinetId": 1,
+    "nomCabinet": "Cabinet Santé Plus",
     "login": "doctor@example.com",
     "nom": "Martin",
     "prenom": "Pierre",
-    "numTel": "+212612345678",
     "signature": "/signatures/pierre_martin.png",
+    "numTel": "+212612345678",
     "role": "MEDECIN"
   },
   {
     "id": 2,
+    "cabinetId": 1,
+    "nomCabinet": "Cabinet Santé Plus",
     "login": "admin@example.com",
     "nom": "Dubois",
     "prenom": "Marie",
-    "numTel": "+212698765432",
     "signature": null,
+    "numTel": "+212698765432",
     "role": "ADMIN"
   }
 ]
@@ -284,11 +291,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 ```json
 {
   "id": 1,
+  "cabinetId": 1,
+  "nomCabinet": "Cabinet Santé Plus",
   "login": "doctor@example.com",
   "nom": "Martin",
   "prenom": "Pierre",
-  "numTel": "+212612345678",
   "signature": "/signatures/pierre_martin.png",
+  "numTel": "+212612345678",
   "role": "MEDECIN"
 }
 ```
@@ -307,11 +316,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 ```json
 {
   "id": 1,
+  "cabinetId": 1,
+  "nomCabinet": "Cabinet Santé Plus",
   "login": "doctor@example.com",
   "nom": "Martin",
   "prenom": "Pierre",
-  "numTel": "+212612345678",
   "signature": "/signatures/pierre_martin.png",
+  "numTel": "+212612345678",
   "role": "MEDECIN"
 }
 ```
@@ -330,12 +341,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 **Request Body:**
 ```json
 {
+  "cabinetId": 1,
   "login": "newdoctor@example.com",
   "pwd": "securePassword123",
   "nom": "Leroy",
   "prenom": "Sophie",
-  "numTel": "+212611223344",
   "signature": "/signatures/sophie_leroy.png",
+  "numTel": "+212611223344",
   "role": "MEDECIN"
 }
 ```
@@ -344,11 +356,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 ```json
 {
   "id": 3,
+  "cabinetId": 1,
+  "nomCabinet": null,
   "login": "newdoctor@example.com",
   "nom": "Leroy",
   "prenom": "Sophie",
-  "numTel": "+212611223344",
   "signature": "/signatures/sophie_leroy.png",
+  "numTel": "+212611223344",
   "role": "MEDECIN"
 }
 ```
@@ -368,12 +382,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 ```json
 {
   "id": 1,
+  "cabinetId": 1,
   "login": "doctor@example.com",
   "pwd": "newPassword123",
   "nom": "Martin",
   "prenom": "Pierre-Louis",
-  "numTel": "+212612345679",
   "signature": "/signatures/pierre_martin_v2.png",
+  "numTel": "+212612345679",
   "role": "MEDECIN"
 }
 ```
@@ -382,18 +397,58 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 ```json
 {
   "id": 1,
+  "cabinetId": 1,
+  "nomCabinet": null,
   "login": "doctor@example.com",
   "nom": "Martin",
   "prenom": "Pierre-Louis",
-  "numTel": "+212612345679",
   "signature": "/signatures/pierre_martin_v2.png",
+  "numTel": "+212612345679",
   "role": "MEDECIN"
 }
 ```
 
 ---
 
-#### 6. Delete User
+#### 6. Get Users by Cabinet ID
+
+| Property | Value |
+|----------|-------|
+| **URL** | `/api/users/byCabinet/{cabinetId}` |
+| **Method** | `GET` |
+| **Auth Required** | ❌ No (currently public) |
+
+**Success Response (200 OK):**
+```json
+[
+  {
+    "id": 1,
+    "cabinetId": 1,
+    "nomCabinet": null,
+    "login": "doctor@example.com",
+    "nom": "Martin",
+    "prenom": "Pierre",
+    "signature": "/signatures/pierre_martin.png",
+    "numTel": "+212612345678",
+    "role": "MEDECIN"
+  },
+  {
+    "id": 2,
+    "cabinetId": 1,
+    "nomCabinet": null,
+    "login": "secretary@example.com",
+    "nom": "Dubois",
+    "prenom": "Marie",
+    "signature": null,
+    "numTel": "+212698765432",
+    "role": "SECRETARY"
+  }
+]
+```
+
+---
+
+#### 7. Delete User
 
 | Property | Value |
 |----------|-------|
@@ -425,6 +480,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `id` | Long | No (Yes for updates) | User ID |
+| `cabinetId` | Long | Yes | Cabinet ID the user belongs to |
 | `login` | String | Yes | Email or username |
 | `pwd` | String | Yes | Password (plain text, will be encrypted) |
 | `nom` | String | Yes | Last name |
@@ -437,6 +493,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 ```json
 {
   "id": 1,
+  "cabinetId": 1,
   "login": "user@example.com",
   "pwd": "password123",
   "nom": "Dupont",
@@ -454,22 +511,26 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | Long | User ID |
+| `cabinetId` | Long | Cabinet ID the user belongs to |
+| `nomCabinet` | String | Cabinet name (nullable, populated on getAllUsers) |
 | `login` | String | Email or username |
 | `nom` | String | Last name |
 | `prenom` | String | First name |
-| `numTel` | String | Phone number |
 | `signature` | String | Path to signature image (nullable) |
+| `numTel` | String | Phone number |
 | `role` | String | User role |
 
 **Example:**
 ```json
 {
   "id": 1,
+  "cabinetId": 1,
+  "nomCabinet": "Cabinet Santé Plus",
   "login": "user@example.com",
   "nom": "Dupont",
   "prenom": "Jean",
-  "numTel": "+212612345678",
   "signature": "/signatures/jean_dupont.png",
+  "numTel": "+212612345678",
   "role": "MEDECIN"
 }
 ```

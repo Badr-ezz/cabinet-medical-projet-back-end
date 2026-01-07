@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class UserRequest {
 
     private Long id;
+    private Long cabinetId;
     private String login;
     private String pwd;
     private String nom;

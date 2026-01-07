@@ -1,9 +1,7 @@
 package com.example.service_cabinet.controller;
 
 
-
-
-import com.example.service_cabinet.dto.CabinetDTO;
+import com.example.cabinet.CabinetDTO;
 import com.example.service_cabinet.dto.CreateCabinetRequest;
 import com.example.service_cabinet.service.CabinetService;
 import jakarta.validation.Valid;
@@ -15,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cabinets")
+@CrossOrigin("*")
 public class CabinetController {
 
     private final CabinetService cabinetService;

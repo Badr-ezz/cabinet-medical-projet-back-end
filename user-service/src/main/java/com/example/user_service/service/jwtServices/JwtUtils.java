@@ -5,6 +5,7 @@ import com.example.user_service.service.userServices.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class JwtUtils {
     @Value("${jwt.secret}")
@@ -26,14 +28,13 @@ public class JwtUtils {
     @Value("${jwt.expirationMs}")
     private long expirationMs;
 
+    @Autowired
+    private UserRepo userRepo;
 
 
     public boolean validateJwtToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSignInKey())
-                    .build()
-                    .parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException e) {
             System.err.println("Invalid JWT token: " + e.getMessage());
@@ -62,20 +63,20 @@ public class JwtUtils {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, Long userId) {
-        String roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+        String roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+
+        if (!roles.equals("ADMIN")) {
+
+            Long cabinetId = userRepo.findById(userId).map(user -> user.getCabinetId() != null ? user.getCabinetId() : null).orElse(null);
+            log.info("cabinetId for userId {}: {}", userId, cabinetId);
+            extraClaims.put("cabinetId", cabinetId);
+        }
+
 
         extraClaims.put("roles", roles);
         extraClaims.put("id", userId);
 
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + expirationMs)).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -92,11 +93,7 @@ public class JwtUtils {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
     }
 
     public String extractRole(String token) {

@@ -1,6 +1,8 @@
 package com.example.user_service.service.userServices;
 
+import com.example.cabinet.CabinetDTO;
 import com.example.user_service.entity.User;
+import com.example.user_service.feign.CabinetServiceClient;
 import com.example.user_service.mapper.EntityToRes;
 import com.example.user_service.mapper.ReqToEntity;
 import com.example.user_service.repository.UserRepo;
@@ -14,6 +16,7 @@ import com.example.user.UserResponse;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,11 +25,13 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final CabinetServiceClient cabinetServiceClient;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder, CabinetServiceClient cabinetServiceClient) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
+        this.cabinetServiceClient = cabinetServiceClient;
     }
 
     @Override
@@ -94,13 +99,28 @@ public class UserServiceImpl implements UserService {
     public List<UserResponse> getAllUsers() {
         try {
             List<User> users = userRepo.findAll();
+            List<CabinetDTO> cabinets = cabinetServiceClient.getAllCabinets();
+
+            // Map cabinetId -> cabinetName
+            Map<Long, String> cabinetNameById = cabinets.stream()
+                    .collect(Collectors.toMap(
+                            CabinetDTO::getId,
+                            CabinetDTO::getNom
+                    ));
+
             return users.stream()
-                    .map(EntityToRes::convertEntityToResponse)
+                    .map(user -> {
+                        UserResponse res = EntityToRes.convertEntityToResponse(user);
+                        res.setNomCabinet(cabinetNameById.get(user.getCabinetId()));
+                        return res;
+                    })
                     .collect(Collectors.toList());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public UserResponse getUserByLogin(String login) {
@@ -108,6 +128,18 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepo.findByLogin(login).orElse(User.builder().build());
             return EntityToRes.convertEntityToResponse(user);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<UserResponse> getUsersByCabinetId(Long cabinetId) {
+        try {
+            List<User> users = userRepo.findUsersByCabinetId(cabinetId).orElse(List.of());
+            return users.stream()
+                    .map(EntityToRes::convertEntityToResponse)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

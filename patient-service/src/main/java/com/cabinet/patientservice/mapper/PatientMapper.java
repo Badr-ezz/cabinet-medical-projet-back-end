@@ -15,6 +15,7 @@ public class PatientMapper {
         }
         return Patient.builder()
                 .cin(dto.getCin())
+                .cabinetId(dto.getCabinetId())
                 .nom(dto.getNom())
                 .prenom(dto.getPrenom())
                 .dateNaissance(dto.getDateNaissance())
@@ -29,6 +30,7 @@ public class PatientMapper {
             return;
         }
         patient.setCin(dto.getCin());
+        patient.setCabinetId(dto.getCabinetId());
         patient.setNom(dto.getNom());
         patient.setPrenom(dto.getPrenom());
         patient.setDateNaissance(dto.getDateNaissance());
@@ -43,6 +45,7 @@ public class PatientMapper {
         }
         PatientResponseDTO dto = new PatientResponseDTO();
         dto.setId(patient.getId());
+        dto.setCabinetId(patient.getCabinetId());
         dto.setCin(patient.getCin());
         dto.setNom(patient.getNom());
         dto.setPrenom(patient.getPrenom());

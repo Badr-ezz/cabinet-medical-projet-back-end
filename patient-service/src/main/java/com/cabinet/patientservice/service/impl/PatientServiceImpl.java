@@ -103,6 +103,19 @@ public class PatientServiceImpl implements PatientService {
                 .map(PatientMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<PatientResponseDTO> getPatientsByCabinetId(Long cabinetId) {
+
+        try {
+            List<Patient> patients = patientRepository.findByCabinetId(cabinetId);
+            return  patients.stream()
+                    .map(PatientMapper::toResponseDto)
+                    .collect(Collectors.toList());
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 

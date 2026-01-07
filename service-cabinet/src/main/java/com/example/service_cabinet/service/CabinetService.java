@@ -2,25 +2,28 @@ package com.example.service_cabinet.service;
 
 
 
-import com.example.service_cabinet.dto.CabinetDTO;
+import com.example.cabinet.CabinetDTO;
 import com.example.service_cabinet.dto.CreateCabinetRequest;
 import com.example.service_cabinet.entity.Cabinet;
 import com.example.service_cabinet.repository.CabinetRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class CabinetService {
 
     private final CabinetRepository cabinetRepository;
-    private final KafkaProducerService kafkaProducerService;
+    private final Optional<KafkaProducerService> kafkaProducerService;
 
-    public CabinetService(CabinetRepository cabinetRepository, KafkaProducerService kafkaProducerService) {
+    public CabinetService(CabinetRepository cabinetRepository,
+                          @Autowired(required = false) KafkaProducerService kafkaProducerService) {
         this.cabinetRepository = cabinetRepository;
-        this.kafkaProducerService = kafkaProducerService;
+        this.kafkaProducerService = Optional.ofNullable(kafkaProducerService);
     }
 
     // Créer un nouveau cabinet
@@ -41,7 +44,6 @@ public class CabinetService {
         cabinet.setAdresse(request.getAdresse());
         cabinet.setTelephone(request.getTelephone());
         cabinet.setEmail(request. getEmail());
-        cabinet.setHoraires(request.getHoraires());
         cabinet.setActif(request.getActif());
 
         // Sauvegarder en base
@@ -49,7 +51,7 @@ public class CabinetService {
         System.out.println("INFO: Cabinet créé avec ID: " + savedCabinet. getId());
 
         // Émettre un événement Kafka
-        kafkaProducerService.sendCabinetCreatedEvent(savedCabinet);
+//        kafkaProducerService.sendCabinetCreatedEvent(savedCabinet);
 
         // Retourner le DTO
         return convertToDTO(savedCabinet);
@@ -102,14 +104,13 @@ public class CabinetService {
         cabinet.setAdresse(request.getAdresse());
         cabinet.setTelephone(request.getTelephone());
         cabinet.setEmail(request.getEmail());
-        cabinet.setHoraires(request. getHoraires());
         cabinet.setActif(request.getActif());
 
         Cabinet updatedCabinet = cabinetRepository.save(cabinet);
         System.out.println("INFO: Cabinet mis à jour avec ID:  " + id);
 
         // Émettre un événement de mise à jour
-        kafkaProducerService.sendCabinetUpdatedEvent(updatedCabinet);
+//        kafkaProducerService.sendCabinetUpdatedEvent(updatedCabinet);
 
         return convertToDTO(updatedCabinet);
     }
@@ -127,7 +128,7 @@ public class CabinetService {
         System.out.println("INFO: Cabinet désactivé avec ID: " + id);
 
         // Émettre un événement de suppression
-        kafkaProducerService.sendCabinetDeletedEvent(id);
+//        kafkaProducerService.sendCabinetDeletedEvent(id);
     }
 
     // Convertir Entity en DTO
@@ -140,7 +141,6 @@ public class CabinetService {
         dto.setAdresse(cabinet.getAdresse());
         dto.setTelephone(cabinet.getTelephone());
         dto.setEmail(cabinet.getEmail());
-        dto.setHoraires(cabinet. getHoraires());
         dto.setActif(cabinet.getActif());
         dto.setCreatedAt(cabinet.getCreatedAt());
         dto.setUpdatedAt(cabinet.getUpdatedAt());

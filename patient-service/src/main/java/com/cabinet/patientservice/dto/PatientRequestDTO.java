@@ -13,6 +13,9 @@ public class PatientRequestDTO {
     @Size(max = 50)
     private String cin;
 
+    private Long cabinetId;
+
+
     @NotBlank
     @Size(max = 100)
     private String nom;
