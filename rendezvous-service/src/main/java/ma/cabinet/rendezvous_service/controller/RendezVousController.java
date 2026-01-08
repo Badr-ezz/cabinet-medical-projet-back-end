@@ -1,5 +1,6 @@
 package ma.cabinet.rendezvous_service.controller;
 
+import com.example.rendezVous.ListeAttenteResponse;
 import jakarta.validation.Valid;
 import ma.cabinet.rendezvous_service.request.RendezVousRequest;
 import ma.cabinet.rendezvous_service.response.RendezVousResponse;
@@ -181,4 +182,14 @@ public class RendezVousController {
         List<RendezVousResponse> list = rendezVousService.getHistoriquePatient(cabinetId, patientId);
         return ResponseEntity.ok(list);
     }
+
+
+    @GetMapping("/liste-attente")
+    @RequireRole({"SECRETARY"})
+    public ResponseEntity<List<ListeAttenteResponse>> getListeAttente(
+            @RequestParam Long cabinetId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(rendezVousService.getListeAttenteByDateAndCabinet(cabinetId, date));
+    }
+
 }

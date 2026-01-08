@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-22\bin"/>
-    <property name="sun.java.command" value="C:\Users\Anas\AppData\Local\Temp\surefire228475390873501024\surefirebooter-20260101160518324_3.jar C:\Users\Anas\AppData\Local\Temp\surefire228475390873501024 2026-01-01T16-05-18_223-jvmRun1 surefire-20260101160518324_1tmp surefire_0-20260101160518324_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Anas\AppData\Local\Temp\surefire11872900650607726907\surefirebooter-20260101171052069_3.jar C:\Users\Anas\AppData\Local\Temp\surefire11872900650607726907 2026-01-01T17-10-51_941-jvmRun1 surefire-20260101171052069_1tmp surefire_0-20260101171052069_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Anas\GI3\cabinet-medical-projet-back-end\contracts\target\test-classes;C:\Users\Anas\GI3\cabinet-medical-projet-back-end\contracts\target\classes;C:\Users\Anas\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;C:\Users\Anas\.m2\repository\org\projectlombok\lombok\1.18.34\lombok-1.18.34.jar;C:\Users\Anas\.m2\repository\jakarta\validation\jakarta.validation-api\3.1.0\jakarta.validation-api-3.1.0.jar;C:\Users\Anas\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.17.2\jackson-annotations-2.17.2.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Anas\AppData\Local\Temp\surefire228475390873501024\surefirebooter-20260101160518324_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Anas\AppData\Local\Temp\surefire11872900650607726907\surefirebooter-20260101171052069_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="22.0.2+9-70"/>
@@ -58,5 +58,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="66.0"/>
   </properties>
-  <testcase name="testApp" classname="com.example.AppTest" time="0.003"/>
+  <testcase name="testApp" classname="com.example.AppTest" time="0.002"/>
 </testsuite>

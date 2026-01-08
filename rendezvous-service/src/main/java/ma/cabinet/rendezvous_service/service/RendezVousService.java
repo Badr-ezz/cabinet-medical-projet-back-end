@@ -1,5 +1,6 @@
 package ma.cabinet.rendezvous_service.service;
 
+import com.example.rendezVous.ListeAttenteResponse;
 import ma.cabinet.rendezvous_service.entity.RendezVous;
 import ma.cabinet.rendezvous_service.request.RendezVousRequest;
 import ma.cabinet.rendezvous_service.response.RendezVousResponse;
@@ -33,6 +34,9 @@ public interface RendezVousService {
     List<RendezVousResponse> getByMedecinAndDate(Long cabinetId, Long medecinId, LocalDate date);
 
     List<RendezVousResponse> getHistoriquePatient(Long cabinetId, Long patientId);
+
+
+    List<ListeAttenteResponse> getListeAttenteByDateAndCabinet(Long cabinetId, LocalDate date);
 
 
 }

@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.patient.PatientResponseDTO;
+import com.example.rendezVous.ListeAttenteResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import ma.cabinet.rendezvous_service.enums.StatutRDV;
+import ma.cabinet.rendezvous_service.feign.PatientFeignClient;
 import ma.cabinet.rendezvous_service.feign.UserFeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +29,15 @@ public class RendezVousServiceImpl implements RendezVousService {
     public final UserFeignClient userFeignClient;
     public final RdvValidations rdvValidations;
     private final HttpServletRequest httpRequest;
+    private final PatientFeignClient patientFeignClient;
 
-    public RendezVousServiceImpl(RendezVousRepository rendezVousRepository, EntityToResponse mapper, UserFeignClient userFeignClient, RdvValidations rdvValidations, HttpServletRequest httpRequest) {
+    public RendezVousServiceImpl(RendezVousRepository rendezVousRepository, EntityToResponse mapper, UserFeignClient userFeignClient, RdvValidations rdvValidations, HttpServletRequest httpRequest, PatientFeignClient patientFeignClient) {
         this.rendezVousRepository = rendezVousRepository;
         this.mapper = mapper;
         this.userFeignClient = userFeignClient;
         this.rdvValidations = rdvValidations;
         this.httpRequest = httpRequest;
+        this.patientFeignClient = patientFeignClient;
     }
 
     @Override
@@ -240,7 +245,30 @@ public class RendezVousServiceImpl implements RendezVousService {
                 .toList();
     }
 
-    
+
+    @Override
+    public List<ListeAttenteResponse> getListeAttenteByDateAndCabinet(Long cabinetId, LocalDate date) {
+        System.out.println("begin getListeAttenteByDateAndCabinet for cabinetId=" + cabinetId + " and date=" + date);
+        List<RendezVous> rendezVousList = rendezVousRepository
+                .findAllByCabinetIdAndDateRdvOrderByHeureRdvAsc(cabinetId, date);
+
+        return rendezVousList.stream().map(rdv -> {
+            PatientResponseDTO patient = patientFeignClient.getPatientById(rdv.getPatientId());
+            return ListeAttenteResponse.builder()
+                    .idRendezVous(rdv.getIdRendezVous())
+                    .dateRdv(rdv.getDateRdv())
+                    .heureRdv(rdv.getHeureRdv())
+                    .motif(rdv.getMotif())
+                    .statut(rdv.getStatut().toString())
+                    .patientId(rdv.getPatientId())
+                    .patientNom(patient.getNom())
+                    .patientPrenom(patient.getPrenom())
+                    .patientTel(patient.getNumTel())
+                    .build();
+        }).toList();
+    }
+
+
 
 
 

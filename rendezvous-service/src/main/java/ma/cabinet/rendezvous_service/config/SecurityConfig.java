@@ -39,6 +39,8 @@ public class SecurityConfig {
                                 "/actuator/health"
                         ).permitAll()
 
+
+
                         // tout le reste doit être authentifié
                         .anyRequest().authenticated()
                 )
