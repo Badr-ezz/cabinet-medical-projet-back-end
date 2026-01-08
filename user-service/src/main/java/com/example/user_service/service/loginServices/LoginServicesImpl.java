@@ -53,7 +53,7 @@ public class LoginServicesImpl implements LoginServices {
         } catch (BadCredentialsException e) {
             return AuthResponse.builder()
                     .token(null)
-                    .isTokenExpired(false)
+                    .tokenExpired(false)
                     .error("Login ou mot de passe incorrect")
                     .userRole(null)
                     .build();
@@ -63,7 +63,7 @@ public class LoginServicesImpl implements LoginServices {
         if (user == null) {
             return AuthResponse.builder()
                     .token(null)
-                    .isTokenExpired(false)
+                    .tokenExpired(false)
                     .error("Utilisateur introuvable")
                     .userRole(null)
                     .build();
@@ -78,7 +78,7 @@ public class LoginServicesImpl implements LoginServices {
 
         return AuthResponse.builder()
                 .token(token)
-                .isTokenExpired(false)
+                .tokenExpired(false)
                 .error(null)
                 .userRole(user.getRole().name())
                 .build();
@@ -124,7 +124,7 @@ public class LoginServicesImpl implements LoginServices {
             if (jwtUtils.isTokenExpired(token)) {
                 return AuthResponse.builder()
                         .token(token)
-                        .isTokenExpired(true)
+                        .tokenExpired(true)
                         .error("Token expiré")
                         .userRole(null)
                         .build();
@@ -136,7 +136,7 @@ public class LoginServicesImpl implements LoginServices {
                 // Retourner le rôle (PAS de validation du rôle ici)
             return AuthResponse.builder()
                     .token(token)
-                    .isTokenExpired(false)
+                    .tokenExpired(false)
                     .error(null)
                     .userRole(role)  // Retourne le rôle, peu importe lequel
                     .build();
@@ -145,7 +145,7 @@ public class LoginServicesImpl implements LoginServices {
             log.error("Erreur validation token: {}", e.getMessage());
             return AuthResponse.builder()
                     .token(token)
-                    .isTokenExpired(false)
+                    .tokenExpired(false)
                     .error("Token invalide ou malformé: " + e.getMessage())
                     .userRole(null)
                     .build();
