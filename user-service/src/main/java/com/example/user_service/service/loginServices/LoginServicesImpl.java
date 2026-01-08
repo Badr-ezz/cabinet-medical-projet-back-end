@@ -47,22 +47,41 @@ public class LoginServicesImpl implements LoginServices {
     }
 
     @Override
-    public String authenticate(String login, String password) {
+    public AuthResponse authenticate(String login, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         } catch (BadCredentialsException e) {
-            throw new AppException("Login  ou mot de passe incorrect", HttpStatus.UNAUTHORIZED, "ERR_INVALID_CREDENTIALS");
+            return AuthResponse.builder()
+                    .token(null)
+                    .isTokenExpired(false)
+                    .error("Login ou mot de passe incorrect")
+                    .userRole(null)
+                    .build();
         }
 
-        User user = userRepository.findByLogin(login).orElseThrow(() -> new AppException("Utilisateur introuvable", HttpStatus.NOT_FOUND, "ERR_USER_NOT_FOUND"));
-
+        User user = userRepository.findByLogin(login).orElse(null);
+        if (user == null) {
+            return AuthResponse.builder()
+                    .token(null)
+                    .isTokenExpired(false)
+                    .error("Utilisateur introuvable")
+                    .userRole(null)
+                    .build();
+        }
 
         // must add the cabinet check (actif / inactif)
 //        if (user.getStatus() != Status.ACTIF) {
 //            throw new AppException("Compte non activé", HttpStatus.FORBIDDEN, "ERR_ACCOUNT_NOT_ACTIVE");
 //        }
         UserDetails userDetails = new CustomUserDetails(user);
-        return jwtUtils.generateToken(userDetails, user.getId());
+        String token = jwtUtils.generateToken(userDetails, user.getId());
+
+        return AuthResponse.builder()
+                .token(token)
+                .isTokenExpired(false)
+                .error(null)
+                .userRole(user.getRole().name())
+                .build();
     }
 
     @Override
@@ -105,7 +124,7 @@ public class LoginServicesImpl implements LoginServices {
             if (jwtUtils.isTokenExpired(token)) {
                 return AuthResponse.builder()
                         .token(token)
-                        .tokenExpired(true)
+                        .isTokenExpired(true)
                         .error("Token expiré")
                         .userRole(null)
                         .build();
@@ -117,7 +136,7 @@ public class LoginServicesImpl implements LoginServices {
                 // Retourner le rôle (PAS de validation du rôle ici)
             return AuthResponse.builder()
                     .token(token)
-                    .tokenExpired(false)
+                    .isTokenExpired(false)
                     .error(null)
                     .userRole(role)  // Retourne le rôle, peu importe lequel
                     .build();
@@ -126,7 +145,7 @@ public class LoginServicesImpl implements LoginServices {
             log.error("Erreur validation token: {}", e.getMessage());
             return AuthResponse.builder()
                     .token(token)
-                    .tokenExpired(false)
+                    .isTokenExpired(false)
                     .error("Token invalide ou malformé: " + e.getMessage())
                     .userRole(null)
                     .build();

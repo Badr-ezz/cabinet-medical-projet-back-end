@@ -8,6 +8,8 @@ import lombok.*;
 @Builder
 public class UserResponse {
     private Long id;
+    private Long cabinetId;
+    private String nomCabinet;
     private String login;
     private String nom;
     private String prenom;

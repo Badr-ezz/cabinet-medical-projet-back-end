@@ -6,7 +6,7 @@ import com.example.user.UserResponse;
 
 public interface LoginServices {
 
-    String authenticate(String login, String pwd);
+    AuthResponse authenticate(String login, String pwd);
     UserResponse register(UserRequest request);
     AuthResponse checkTokenValidity (String token);
 }

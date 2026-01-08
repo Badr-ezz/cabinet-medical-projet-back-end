@@ -1,0 +1,35 @@
+# Alternative configuration for development using MySQL root user
+# To use this configuration, run: mvn spring-boot:run -Dspring-boot.run.profiles=dev
+# Or set: SPRING_PROFILES_ACTIVE=dev
+
+spring:
+  application:
+    name: consultation-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/consultation_service_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root  # Change this to your MySQL root password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8082
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+

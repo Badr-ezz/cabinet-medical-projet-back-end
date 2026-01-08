@@ -7,6 +7,7 @@ import com.example.user_service.service.loginServices.LoginServices;
 import com.example.user_service.service.logoutServices.LogoutServices;
 import com.example.user_service.service.userServices.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.*;
 
+
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin("*")
 public class AuthController {
 
     private final LoginServices loginServices;
@@ -29,15 +32,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserRequest userReq) {
-        try {
-            String token = loginServices.authenticate(userReq.getLogin(), userReq.getPwd());
-            return ResponseEntity.ok(token);
+    public ResponseEntity<AuthResponse> login(@RequestBody UserRequest userReq) {
+        AuthResponse authResponse = loginServices.authenticate(userReq.getLogin(), userReq.getPwd());
 
-        } catch (Exception e) {
-            // see how to handle the exception
-            throw new RuntimeException(e);
+        if (authResponse.getError() != null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authResponse);
         }
+
+        return ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/register")
@@ -62,6 +64,18 @@ public class AuthController {
             response.setError(e.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
+    }
+
+    // Logout endpoint: extracts bearer token from Authorization header and delegates to LogoutServices
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header == null || !header.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().build();
+        }
+        String token = header.substring(7);
+        logoutServices.logout(token);
+        return ResponseEntity.ok().build();
     }
 
     // extract roles and check the token validity

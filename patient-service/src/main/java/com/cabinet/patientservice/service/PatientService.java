@@ -20,6 +20,8 @@ public interface PatientService {
     PatientResponseDTO getPatientByCin(String cin);
 
     List<PatientResponseDTO> searchPatientsByNom(String nom);
+
+    List<PatientResponseDTO> getPatientsByCabinetId(Long cabinetId);
 }
 
 

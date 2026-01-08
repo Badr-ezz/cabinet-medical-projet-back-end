@@ -3,8 +3,10 @@ com\example\user\UserResponse$UserResponseBuilder.class
 com\example\auth\AuthResponse.class
 com\example\rendezVous\ListeAttenteResponse$ListeAttenteResponseBuilder.class
 com\example\App.class
+com\example\cabinet\CabinetDTO$CabinetDTOBuilder.class
 com\example\notifcation\NotificationResponse$NotificationResponseBuilder.class
 com\example\notifcation\NotificationResponse.class
 com\example\rendezVous\ListeAttenteResponse.class
 com\example\user\UserResponse.class
+com\example\cabinet\CabinetDTO.class
 com\example\patient\PatientResponseDTO.class

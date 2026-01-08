@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin("*")
 public class UserController {
 
     private final UserService userService;
@@ -84,6 +85,18 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur dans la recherche  des l'utilisateurs" + e.getMessage());
         }
+    }
+
+
+    @GetMapping("/byCabinet/{cabinetId}")
+    public ResponseEntity<?> getUsersByCabinetId(@PathVariable Long cabinetId) {
+            try {
+                List<UserResponse> res = userService.getUsersByCabinetId(cabinetId);
+                return ResponseEntity.ok(res);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Erreur dans la recherche  des l'utilisateurs par cabinetId" + e.getMessage());
+            }
     }
 }
 

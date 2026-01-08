@@ -13,6 +13,8 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     boolean existsByCin(String cin);
 
     List<Patient> findByNomIgnoreCaseContaining(String nom);
+
+    List<Patient> findByCabinetId(Long cabinetId);
 }
 
 
