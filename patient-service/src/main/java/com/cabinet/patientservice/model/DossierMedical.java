@@ -22,27 +22,21 @@ public class DossierMedical {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDossier;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String antecedentsMedicaux;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String antecedentsChirurgicaux;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String allergies;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String traitements;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String habitudes;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String documentsMedicaux;
 

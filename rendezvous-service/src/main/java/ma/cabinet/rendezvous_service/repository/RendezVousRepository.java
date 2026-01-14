@@ -3,6 +3,7 @@ package ma.cabinet.rendezvous_service.repository;
 import jdk.jfr.Registered;
 import ma.cabinet.rendezvous_service.entity.ListeAttente;
 import ma.cabinet.rendezvous_service.entity.RendezVous;
+import ma.cabinet.rendezvous_service.enums.StatutRDV;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -25,4 +26,11 @@ public interface RendezVousRepository extends JpaRepository<RendezVous,Long> {
     List<RendezVous> findAllByCabinetIdAndPatientIdOrderByDateRdvDescHeureRdvDesc(
             Long cabinetId, Long patientId
     );
+
+    Optional<RendezVous> findByDateRdvAndHeureRdvAndStatutRDVNot(
+            LocalDate date,
+            LocalTime heure,
+            StatutRDV status
+    );
+
 }

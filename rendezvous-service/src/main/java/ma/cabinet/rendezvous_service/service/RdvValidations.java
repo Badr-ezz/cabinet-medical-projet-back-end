@@ -1,5 +1,6 @@
 package ma.cabinet.rendezvous_service.service;
 
+import ma.cabinet.rendezvous_service.enums.StatutRDV;
 import ma.cabinet.rendezvous_service.feign.UserFeignClient;
 import ma.cabinet.rendezvous_service.repository.RendezVousRepository;
 import ma.cabinet.rendezvous_service.request.RendezVousRequest;
@@ -115,13 +116,14 @@ public class RdvValidations {
 
         // 4) Pas de doublon (même date + heure)
         boolean exists = rendezVousRepository
-                .findByDateRdvAndHeureRdv(date, time)
+                .findByDateRdvAndHeureRdvAndStatutRDVNot(date, time, StatutRDV.ANNULE)
                 .isPresent();
 
         if (exists) {
             System.err.println("❌ Créneau déjà occupé: " + date + " " + time);
             return false;
         }
+
 
         System.out.println("✅ Validation RDV OK");
         return true;

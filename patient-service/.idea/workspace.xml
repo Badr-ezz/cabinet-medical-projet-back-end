@@ -5,61 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a289a10d-0979-4e86-8a7d-0a8e120151df" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../contracts/src/main/java/com/example/user/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/src/main/java/com/example/user/UserResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/classes/com/example/user/UserResponse$UserResponseBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/classes/com/example/user/UserResponse$UserResponseBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/classes/com/example/user/UserResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/classes/com/example/user/UserResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/contracts-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/contracts-1.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/surefire-reports/TEST-com.example.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/surefire-reports/TEST-com.example.AppTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/surefire-reports/com.example.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/surefire-reports/com.example.AppTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/PatientServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/PatientServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/controller/PatientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/controller/PatientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/dto/PatientRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/dto/PatientRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/dto/PatientResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/dto/PatientResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/mapper/PatientMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/mapper/PatientMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/model/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/model/Patient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/repository/PatientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/repository/PatientRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/service/PatientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/service/PatientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/service/impl/PatientServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/service/impl/PatientServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/ServiceCabinetApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/ServiceCabinetApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/config/KafkaConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/config/KafkaConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/controller/CabinetController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/controller/CabinetController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/dto/CabinetDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/dto/CreateCabinetRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/dto/CreateCabinetRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/entity/Cabinet.java" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/entity/Cabinet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/service/CabinetService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/service/CabinetService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/service/KafkaProducerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/src/main/java/com/example/service_cabinet/service/KafkaProducerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/ServiceCabinetApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/ServiceCabinetApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/config/KafkaConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/config/KafkaConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/controller/CabinetController$ErrorResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/controller/CabinetController$ErrorResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/controller/CabinetController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/controller/CabinetController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/dto/CabinetDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/dto/CreateCabinetRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/dto/CreateCabinetRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/entity/Cabinet.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/entity/Cabinet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/service/CabinetService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/service/CabinetService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/service/KafkaProducerService$CabinetDeletedEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/service/KafkaProducerService$CabinetDeletedEvent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/service/KafkaProducerService$CabinetEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/service/KafkaProducerService$CabinetEvent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/service/KafkaProducerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../service-cabinet/target/classes/com/example/service_cabinet/service/KafkaProducerService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/mapper/EntityToRes.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/mapper/EntityToRes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/mapper/ReqToEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/mapper/ReqToEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/repository/UserRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/repository/UserRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/request/UserRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/request/UserRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/service/jwtServices/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/service/jwtServices/JwtUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/service/userServices/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/service/userServices/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/service/userServices/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/src/main/java/com/example/user_service/service/userServices/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/model/DossierMedical.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cabinet/patientservice/model/DossierMedical.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cabinet/patientservice/model/DossierMedical.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cabinet/patientservice/model/DossierMedical.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/controller/RendezVousController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/controller/RendezVousController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/repository/RendezVousRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/repository/RendezVousRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/service/RdvValidations.java" beforeDir="false" afterPath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/service/RdvValidations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../rendezvous-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../rendezvous-service/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +22,13 @@
   </component>
   <component name="ComposerSettings">
     <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -84,27 +45,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.patient-service-badr.executor": "Run",
-    "git-widget-placeholder": "badr",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.patient-service-badr.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;badr&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Spring Boot.patient-service-badr">
     <configuration name="PatientServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="patient-service" />
@@ -143,7 +104,10 @@
       <updated>1767188514938</updated>
       <workItem from="1767188516213" duration="1384000" />
       <workItem from="1767274913720" duration="121000" />
-      <workItem from="1767788890121" duration="4996000" />
+      <workItem from="1767788890121" duration="5573000" />
+      <workItem from="1767881064079" duration="5061000" />
+      <workItem from="1767962266877" duration="1233000" />
+      <workItem from="1768320916643" duration="4628000" />
     </task>
     <servers />
   </component>

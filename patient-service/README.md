@@ -52,6 +52,7 @@ patient-service/
 | `sexe`         | String(10)  | Nullable                       | Sexe du patient            |
 | `numTel`       | String(20)  | Nullable                       | Numéro de téléphone        |
 | `typeMutuelle` | String(100) | Nullable                       | Type de mutuelle           |
+| `cabinetId`    | Long        | NOT NULL                       | ID du cabinet médical      |
 
 **Relation :** `OneToOne` avec `DossierMedical` (Un patient possède un dossier médical)
 
@@ -85,7 +86,8 @@ Utilisé pour la création et la mise à jour d'un patient.
     "dateNaissance": "1990-05-15",
     "sexe": "Masculin",
     "numTel": "0612345678",
-    "typeMutuelle": "CNSS"
+    "typeMutuelle": "CNSS",
+    "cabinetId": 1              // @NotNull - ID du cabinet médical
 }
 ```
 
@@ -102,7 +104,8 @@ Retourné par l'API lors des opérations de lecture.
     "dateNaissance": "1990-05-15",
     "sexe": "Masculin",
     "numTel": "0612345678",
-    "typeMutuelle": "CNSS"
+    "typeMutuelle": "CNSS",
+    "cabinetId": 1
 }
 ```
 
@@ -138,6 +141,7 @@ Base URL: `/api/patients`
 | `GET`   | `/api/patients`     | Récupérer tous les patients          | -                   | List\<PatientResponseDTO\> |
 | `GET`   | `/api/patients/{id}`| Récupérer un patient par ID          | -                   | PatientResponseDTO  |
 | `GET`   | `/api/patients/cin/{cin}` | Récupérer un patient par CIN    | -                   | PatientResponseDTO  |
+| `GET`   | `/api/patients/cabinet/{cabinetId}` | Récupérer les patients d'un cabinet | -         | List\<PatientResponseDTO\> |
 | `GET`   | `/api/patients/search?nom={nom}` | Rechercher patients par nom | -              | List\<PatientResponseDTO\> |
 | `PUT`   | `/api/patients/{id}`| Mettre à jour un patient             | PatientRequestDTO   | PatientResponseDTO  |
 | `DELETE`| `/api/patients/{id}`| Supprimer un patient                 | -                   | 204 No Content      |
@@ -155,30 +159,25 @@ Base URL: `/api/dossiers`
 
 ## ⚙️ Configuration
 
-### Application Properties (`application.yml`)
+### Application Properties (`application-badr.properties`)
 
-```yaml
-spring:
-  application:
-    name: patient-service
-  datasource:
-    url: jdbc:mysql://localhost:3306/patient_service_db
-    username: patient_app
-    password: patient123
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-
-server:
-  port: 8081
+```properties
+spring.application.name=patient-service
+server.port=8085
+spring.datasource.url=jdbc:postgresql://localhost:5432/cabinet-medical-patient
+spring.datasource.username=postgres
+spring.datasource.password=ana123
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 ```
 
 ### 📊 Base de données
 
-- **Type:** MySQL 8.0
-- **Database:** `patient_service_db`
-- **Port:** 3306
+- **Type:** PostgreSQL
+- **Database:** `cabinet-medical-patient`
+- **Port:** 5432
 
 ---
 
@@ -188,7 +187,7 @@ server:
 
 - Java 17+
 - Maven 3.6+
-- MySQL 8.0+
+- PostgreSQL
 
 ### Installation
 
@@ -198,12 +197,9 @@ server:
    cd patient-service
    ```
 
-2. **Configurer la base de données MySQL**
+2. **Configurer la base de données PostgreSQL**
    ```sql
-   CREATE DATABASE patient_service_db;
-   CREATE USER 'patient_app'@'localhost' IDENTIFIED BY 'patient123';
-   GRANT ALL PRIVILEGES ON patient_service_db.* TO 'patient_app'@'localhost';
-   FLUSH PRIVILEGES;
+   CREATE DATABASE "cabinet-medical-patient";
    ```
 
 3. **Compiler et lancer l'application**
@@ -236,7 +232,7 @@ http://localhost:8081/swagger-ui.html
 | Spring Boot               | 3.3.4   | Framework principal                  |
 | Spring Data JPA           | -       | Accès aux données                    |
 | Spring Validation         | -       | Validation des DTOs                  |
-| MySQL Connector           | -       | Driver MySQL                         |
+| PostgreSQL                | -       | Base de données                      |
 | Lombok                    | -       | Réduction du boilerplate             |
 | SpringDoc OpenAPI         | 2.6.0   | Documentation Swagger                |
 
