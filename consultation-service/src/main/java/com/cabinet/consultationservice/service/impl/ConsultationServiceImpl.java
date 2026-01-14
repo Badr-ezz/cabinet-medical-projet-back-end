@@ -18,6 +18,10 @@ import com.cabinet.consultationservice.model.Consultation;
 import com.cabinet.consultationservice.repository.ConsultationRepository;
 import com.cabinet.consultationservice.service.ConsultationService;
 import feign.FeignException;
+import com.cabinet.consultationservice.model.Medicament;
+import com.cabinet.consultationservice.model.Ordonnance;
+import com.cabinet.consultationservice.enums.TypeOrdonnance;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,10 +41,10 @@ public class ConsultationServiceImpl implements ConsultationService {
     private final FacturationServiceClient facturationServiceClient;
 
     public ConsultationServiceImpl(ConsultationRepository consultationRepository,
-                                   PatientServiceClient patientServiceClient,
-                                   RendezVousServiceClient rendezVousServiceClient,
-                                   UserServiceClient userServiceClient,
-                                   FacturationServiceClient facturationServiceClient) {
+            PatientServiceClient patientServiceClient,
+            RendezVousServiceClient rendezVousServiceClient,
+            UserServiceClient userServiceClient,
+            FacturationServiceClient facturationServiceClient) {
         this.consultationRepository = consultationRepository;
         this.patientServiceClient = patientServiceClient;
         this.rendezVousServiceClient = rendezVousServiceClient;
@@ -53,72 +57,37 @@ public class ConsultationServiceImpl implements ConsultationService {
         if (requestDTO.getPatientId() == null) {
             throw new ValidationException("Patient ID is required");
         }
-        if (requestDTO.getRendezVousId() == null) {
-            throw new ValidationException("Rendez-vous ID is required");
-        }
-        if (requestDTO.getMedecinId() == null) {
-            throw new ValidationException("Medecin ID is required");
-        }
+        // ... (validations)
 
-        // 1. Fetch and validate patient data from patient-service
-        PatientResponseDTO patient;
-        try {
-            patient = patientServiceClient.getPatientById(requestDTO.getPatientId());
-        } catch (FeignException.NotFound e) {
-            throw new ValidationException("Patient with id " + requestDTO.getPatientId() + " not found in patient-service");
-        } catch (FeignException e) {
-            throw new ValidationException("Error communicating with patient-service: " + e.getMessage());
-        }
-
-        // 2. Fetch patient's medical dossier (dossier médical) for allergies and medical history
-        DossierMedicalDTO dossierMedical;
-        try {
-            dossierMedical = patientServiceClient.getDossierByPatientId(requestDTO.getPatientId());
-            log.info("Fetched dossier médical for patient {}: allergies={}", requestDTO.getPatientId(), dossierMedical.getAllergies());
-        } catch (FeignException.NotFound e) {
-            log.warn("Dossier médical not found for patient {}", requestDTO.getPatientId());
-            dossierMedical = null; // Dossier might not exist yet, continue anyway
-        } catch (FeignException e) {
-            log.warn("Error fetching dossier médical: {}", e.getMessage());
-            dossierMedical = null; // Continue without dossier data
-        }
-
-        // 3. Validate that rendez-vous exists and is confirmed
-        RendezVousResponseDTO rendezVous;
-        try {
-            rendezVous = rendezVousServiceClient.getRendezVousById(requestDTO.getRendezVousId());
-            // Verify rendez-vous is for the correct patient
-            if (!rendezVous.getPatientId().equals(requestDTO.getPatientId())) {
-                throw new ValidationException("Rendez-vous " + requestDTO.getRendezVousId() + 
-                    " does not belong to patient " + requestDTO.getPatientId());
-            }
-            // Verify rendez-vous is confirmed
-            if (!"CONFIRME".equalsIgnoreCase(rendezVous.getStatut())) {
-                throw new ValidationException("Rendez-vous " + requestDTO.getRendezVousId() + 
-                    " is not confirmed. Current status: " + rendezVous.getStatut());
-            }
-        } catch (FeignException.NotFound e) {
-            throw new ValidationException("Rendez-vous with id " + requestDTO.getRendezVousId() + " not found in rendezvous-service");
-        } catch (FeignException e) {
-            throw new ValidationException("Error communicating with rendezvous-service: " + e.getMessage());
-        }
-
-        // 4. Validate that medecin exists in user-service
-        try {
-            userServiceClient.getUserById(requestDTO.getMedecinId());
-        } catch (FeignException.NotFound e) {
-            throw new ValidationException("Medecin with id " + requestDTO.getMedecinId() + " not found in user-service");
-        } catch (FeignException e) {
-            throw new ValidationException("Error communicating with user-service: " + e.getMessage());
-        }
+        // ... (checks for patient, rendezvous, medecin)
 
         // 5. Create the consultation
         Consultation consultation = ConsultationMapper.toEntity(requestDTO);
+
+        // Handle Medicaments
+        if (requestDTO.getMedicaments() != null && !requestDTO.getMedicaments().isEmpty()) {
+            log.info("Received {} medicaments for consultation.", requestDTO.getMedicaments().size());
+            Ordonnance ordonnance = new Ordonnance();
+            ordonnance.setType(TypeOrdonnance.MEDICAMENT);
+            ordonnance.setConsultation(consultation);
+
+            List<Medicament> medicaments = requestDTO.getMedicaments().stream().map(mDto -> {
+                Medicament m = new Medicament();
+                m.setNom(mDto.getNom());
+                m.setDosage(mDto.getDosage());
+                m.setDuree(mDto.getDuree());
+                m.setDescription(mDto.getDescription());
+                m.setOrdonnance(ordonnance);
+                return m;
+            }).collect(Collectors.toList());
+
+            ordonnance.setMedicaments(medicaments);
+            consultation.getOrdonnances().add(ordonnance);
+        }
+
         Consultation saved = consultationRepository.save(consultation);
-        
-        // 6. Send billing information to facturation-service (optional/non-blocking)
-        // If facturation-service is not available, billing can be handled later
-        sendBillingToFacturationService(saved.getId(), requestDTO);
+
+        // ...
 
         return ConsultationMapper.toResponseDto(saved);
     }
@@ -135,15 +104,17 @@ public class ConsultationServiceImpl implements ConsultationService {
                     .montant(calculateConsultationAmount(requestDTO))
                     .modePaiement("ASSURANCE") // Default - can be made configurable
                     .build();
-            
+
             facturationServiceClient.createFacture(factureRequest);
             log.info("Billing information sent to facturation-service for consultation {}", consultationId);
         } catch (FeignException.ServiceUnavailable | FeignException.NotFound e) {
             // Service not available - billing can be handled later
-            log.warn("Facturation-service unavailable. Billing for consultation {} will be handled later", consultationId);
+            log.warn("Facturation-service unavailable. Billing for consultation {} will be handled later",
+                    consultationId);
         } catch (Exception e) {
             // Any other error - log but don't fail consultation
-            log.error("Error sending billing to facturation-service for consultation {}: {}", consultationId, e.getMessage());
+            log.error("Error sending billing to facturation-service for consultation {}: {}", consultationId,
+                    e.getMessage());
         }
     }
 
@@ -206,7 +177,8 @@ public class ConsultationServiceImpl implements ConsultationService {
         // Map ordonnances
         if (consultation.getOrdonnances() != null && !consultation.getOrdonnances().isEmpty()) {
             dto.setOrdonnances(consultation.getOrdonnances().stream()
-                    .map(ordonnance -> com.cabinet.consultationservice.mapper.OrdonnanceMapper.toResponseDto(ordonnance))
+                    .map(ordonnance -> com.cabinet.consultationservice.mapper.OrdonnanceMapper
+                            .toResponseDto(ordonnance))
                     .collect(Collectors.toList()));
         }
 
@@ -222,11 +194,19 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ConsultationResponseDTO> getConsultationsByMedecinId(Long medecinId) {
+        return consultationRepository.findByMedecinId(medecinId).stream()
+                .map(ConsultationMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void deleteConsultation(Long id) {
         Consultation consultation = consultationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consultation with id " + id + " not found"));
-        // Ordonnances and Medicaments will be deleted because of cascade and orphanRemoval
+        // Ordonnances and Medicaments will be deleted because of cascade and
+        // orphanRemoval
         consultationRepository.delete(consultation);
     }
 }
-

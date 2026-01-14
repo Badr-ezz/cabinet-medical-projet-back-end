@@ -15,6 +15,6 @@ public class PatientResponseDTO {
     private String sexe;
     private String numTel;
     private String typeMutuelle;
+    private String email;
+    private String adresse;
 }
-
-

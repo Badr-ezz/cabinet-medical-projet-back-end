@@ -3,9 +3,10 @@ spring:
     name: consultation-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/consultation_service_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: consultation_app
-    password: consultation123
+    url: jdbc:postgresql://localhost:5432/consultation_service_db
+    username: cabinet_app
+    password: cabinet123
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
@@ -14,9 +15,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 server:
-  port: 8082
+  port: 8084
 
 logging:
   level:

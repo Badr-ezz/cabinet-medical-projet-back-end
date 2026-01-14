@@ -10,10 +10,9 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "patients",
-        uniqueConstraints = {
+@Table(name = "patients", uniqueConstraints = {
                 @UniqueConstraint(name = "uk_patient_cin", columnNames = "cin")
-        })
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,35 +20,36 @@ import java.time.LocalDate;
 @Builder
 public class Patient {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String cin;
+        @Column(nullable = false, unique = true, length = 50)
+        private String cin;
 
-    @Column(nullable = false, length = 100)
-    private String nom;
+        @Column(nullable = false, length = 100)
+        private String nom;
 
-    @Column(nullable = false, length = 100)
-    private String prenom;
+        @Column(nullable = false, length = 100)
+        private String prenom;
 
-    private LocalDate dateNaissance;
+        private LocalDate dateNaissance;
 
-    @Column(length = 10)
-    private String sexe;
+        @Column(length = 10)
+        private String sexe;
 
-    @Column(length = 20)
-    private String numTel;
+        @Column(length = 20)
+        private String numTel;
 
-    @Column(length = 100)
-    private String typeMutuelle;
+        @Column(length = 100)
+        private String typeMutuelle;
 
-    @OneToOne(mappedBy = "patient",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private DossierMedical dossierMedical;
+        @Column(length = 100)
+        private String email;
+
+        @Column(length = 255)
+        private String adresse;
+
+        @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+        private DossierMedical dossierMedical;
 }
-
-

@@ -28,6 +28,7 @@ public class PatientRequestDTO {
     private String numTel;
 
     private String typeMutuelle;
+    private String email;
+    private String adresse;
+    private Long cabinetId;
 }
-
-

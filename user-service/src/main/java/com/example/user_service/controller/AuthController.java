@@ -29,10 +29,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserRequest userReq) {
+    public ResponseEntity<AuthResponse> login(@RequestBody UserRequest userReq) {
         try {
             String token = loginServices.authenticate(userReq.getLogin(), userReq.getPwd());
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(AuthResponse.builder()
+                    .token(token)
+                    .isTokenExpired(false)
+                    .build());
 
         } catch (Exception e) {
             // see how to handle the exception
@@ -51,7 +54,7 @@ public class AuthController {
 
     @GetMapping("/validate-token")
     public ResponseEntity<AuthResponse> validateToken(@RequestParam("token") String token) {
-            AuthResponse response = AuthResponse.builder().build();
+        AuthResponse response = AuthResponse.builder().build();
         try {
             log.info("Validating token:{}", token);
             response = loginServices.checkTokenValidity(token);

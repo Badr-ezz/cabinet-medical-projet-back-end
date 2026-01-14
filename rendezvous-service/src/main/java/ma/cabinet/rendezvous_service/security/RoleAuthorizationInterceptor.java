@@ -25,7 +25,8 @@ public class RoleAuthorizationInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
 
         System.out.println("🔍 Interceptor déclenché pour: " + request.getRequestURI());
 
@@ -65,7 +66,8 @@ public class RoleAuthorizationInterceptor implements HandlerInterceptor {
         String userRole = authResponse.getUserRole();
         if (userRole == null) {
             System.err.println("❌ Impossible d'extraire le rôle");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Impossible d'extraire le rôle: " + authResponse.getError());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                    "Impossible d'extraire le rôle: " + authResponse.getError());
             return false;
         }
 
@@ -75,11 +77,24 @@ public class RoleAuthorizationInterceptor implements HandlerInterceptor {
         String[] allowedRoles = requireRole.value();
         boolean isAuthorized = false;
 
-        for (String allowedRole : allowedRoles) {
-            if (userRole.equalsIgnoreCase(allowedRole)) {
-                isAuthorized = true;
-                break;
+        // Support multiple roles in CSV format (e.g. "ROLE_MEDECIN,ROLE_ADMIN")
+        String[] userRoles = userRole.split(",");
+
+        for (String role : userRoles) {
+            String normalized = role.trim();
+            if (normalized.startsWith("ROLE_")) {
+                normalized = normalized.substring(5);
             }
+
+            for (String allowedRole : allowedRoles) {
+                if (normalized.equalsIgnoreCase(allowedRole)) {
+                    isAuthorized = true;
+                    break;
+                }
+            }
+
+            if (isAuthorized)
+                break;
         }
 
         if (!isAuthorized) {

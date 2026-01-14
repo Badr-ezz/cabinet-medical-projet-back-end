@@ -105,7 +105,7 @@ public class LoginServicesImpl implements LoginServices {
             if (jwtUtils.isTokenExpired(token)) {
                 return AuthResponse.builder()
                         .token(token)
-                        .tokenExpired(true)
+                        .isTokenExpired(true)
                         .error("Token expiré")
                         .userRole(null)
                         .build();
@@ -117,7 +117,7 @@ public class LoginServicesImpl implements LoginServices {
                 // Retourner le rôle (PAS de validation du rôle ici)
             return AuthResponse.builder()
                     .token(token)
-                    .tokenExpired(false)
+                    .isTokenExpired(false)
                     .error(null)
                     .userRole(role)  // Retourne le rôle, peu importe lequel
                     .build();
@@ -126,7 +126,7 @@ public class LoginServicesImpl implements LoginServices {
             log.error("Erreur validation token: {}", e.getMessage());
             return AuthResponse.builder()
                     .token(token)
-                    .tokenExpired(false)
+                    .isTokenExpired(false)
                     .error("Token invalide ou malformé: " + e.getMessage())
                     .userRole(null)
                     .build();

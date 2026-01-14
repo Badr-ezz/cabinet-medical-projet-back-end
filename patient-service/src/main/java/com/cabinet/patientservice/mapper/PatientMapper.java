@@ -21,6 +21,8 @@ public class PatientMapper {
                 .sexe(dto.getSexe())
                 .numTel(dto.getNumTel())
                 .typeMutuelle(dto.getTypeMutuelle())
+                .email(dto.getEmail())
+                .adresse(dto.getAdresse())
                 .build();
     }
 
@@ -35,6 +37,8 @@ public class PatientMapper {
         patient.setSexe(dto.getSexe());
         patient.setNumTel(dto.getNumTel());
         patient.setTypeMutuelle(dto.getTypeMutuelle());
+        patient.setEmail(dto.getEmail());
+        patient.setAdresse(dto.getAdresse());
     }
 
     public static PatientResponseDTO toResponseDto(Patient patient) {
@@ -50,8 +54,8 @@ public class PatientMapper {
         dto.setSexe(patient.getSexe());
         dto.setNumTel(patient.getNumTel());
         dto.setTypeMutuelle(patient.getTypeMutuelle());
+        dto.setEmail(patient.getEmail());
+        dto.setAdresse(patient.getAdresse());
         return dto;
     }
 }
-
-

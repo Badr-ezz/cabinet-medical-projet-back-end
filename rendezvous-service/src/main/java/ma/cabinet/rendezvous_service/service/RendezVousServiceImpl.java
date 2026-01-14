@@ -31,7 +31,8 @@ public class RendezVousServiceImpl implements RendezVousService {
     public final RdvValidations rdvValidations;
     private final HttpServletRequest httpRequest;
 
-    public RendezVousServiceImpl(RendezVousRepository rendezVousRepository, EntityToResponse mapper, UserFeignClient userFeignClient, RdvValidations rdvValidations, HttpServletRequest httpRequest) {
+    public RendezVousServiceImpl(RendezVousRepository rendezVousRepository, EntityToResponse mapper,
+            UserFeignClient userFeignClient, RdvValidations rdvValidations, HttpServletRequest httpRequest) {
         this.rendezVousRepository = rendezVousRepository;
         this.mapper = mapper;
         this.userFeignClient = userFeignClient;
@@ -63,8 +64,6 @@ public class RendezVousServiceImpl implements RendezVousService {
         return mapper.toResponse(saved);
     }
 
-
-
     @Override
     public RendezVousResponse updateRendezVous(Long id, RendezVousRequest request) {
         RendezVous rdv = rendezVousRepository.findById(id)
@@ -87,7 +86,8 @@ public class RendezVousServiceImpl implements RendezVousService {
     @Transactional(readOnly = true)
     public RendezVousResponse getRendezVousById(Long id) {
         RendezVous rdv = rendezVousRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rendez-vous introuvable avec id=" + id));
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND, "Rendez-vous introuvable avec id=" + id));
 
         return mapper.toResponse(rdv);
     }
@@ -109,48 +109,51 @@ public class RendezVousServiceImpl implements RendezVousService {
                 .toList();
     }
 
-//    private void validateRendezVousRequest(RendezVousRequest request) {
-//        System.out.println(">>> VALIDATION RDV APPELEE <<<");
-//        LocalDate date = request.getDateRdv();
-//        LocalTime time = request.getHeureRdv();
-//
-//        // 1) Vérifier que la date n'est pas dans le passé
-//        if (date == null || time == null) {
-//            throw new IllegalArgumentException("La date et l'heure du rendez-vous sont obligatoires.");
-//        }
-//
-//        if (date.isBefore(LocalDate.now())) {
-//            throw new IllegalArgumentException("La date du rendez-vous ne peut pas être dans le passé.");
-//        }
-//
-//        // 2) Vérifier les horaires d'ouverture : 08:00–12:00 et 14:00–18:00
-//        LocalTime startMorning = LocalTime.of(8, 0);
-//        LocalTime endMorning = LocalTime.of(12, 0);
-//        LocalTime startAfternoon = LocalTime.of(14, 0);
-//        LocalTime endAfternoon = LocalTime.of(18, 0);
-//
-//        boolean inMorning = !time.isBefore(startMorning) && !time.isAfter(endMorning);
-//        boolean inAfternoon = !time.isBefore(startAfternoon) && !time.isAfter(endAfternoon);
-//
-//        if (!(inMorning || inAfternoon)) {
-//            throw new IllegalArgumentException(
-//                    "L'heure du rendez-vous doit être entre 08:00–12:00 ou 14:00–18:00.");
-//        }
-//
-//        // 3) Vérifier qu'il n'y a pas déjà un rendez-vous à ce créneau
-//        boolean exists = rendezVousRepository
-//                .findByDateRdvAndHeureRdv(date, time)
-//                .isPresent();
-//
-//        if (exists) {
-//            throw new IllegalArgumentException(
-//                    "Un rendez-vous existe déjà pour ce créneau (date + heure).");
-//        }
-//
-//        System.out.println("LocalDate.now() = " + LocalDate.now());
-//        System.out.println("dateRdv reçue = " + request.getDateRdv());
-//    }
-
+    // private void validateRendezVousRequest(RendezVousRequest request) {
+    // System.out.println(">>> VALIDATION RDV APPELEE <<<");
+    // LocalDate date = request.getDateRdv();
+    // LocalTime time = request.getHeureRdv();
+    //
+    // // 1) Vérifier que la date n'est pas dans le passé
+    // if (date == null || time == null) {
+    // throw new IllegalArgumentException("La date et l'heure du rendez-vous sont
+    // obligatoires.");
+    // }
+    //
+    // if (date.isBefore(LocalDate.now())) {
+    // throw new IllegalArgumentException("La date du rendez-vous ne peut pas être
+    // dans le passé.");
+    // }
+    //
+    // // 2) Vérifier les horaires d'ouverture : 08:00–12:00 et 14:00–18:00
+    // LocalTime startMorning = LocalTime.of(8, 0);
+    // LocalTime endMorning = LocalTime.of(12, 0);
+    // LocalTime startAfternoon = LocalTime.of(14, 0);
+    // LocalTime endAfternoon = LocalTime.of(18, 0);
+    //
+    // boolean inMorning = !time.isBefore(startMorning) &&
+    // !time.isAfter(endMorning);
+    // boolean inAfternoon = !time.isBefore(startAfternoon) &&
+    // !time.isAfter(endAfternoon);
+    //
+    // if (!(inMorning || inAfternoon)) {
+    // throw new IllegalArgumentException(
+    // "L'heure du rendez-vous doit être entre 08:00–12:00 ou 14:00–18:00.");
+    // }
+    //
+    // // 3) Vérifier qu'il n'y a pas déjà un rendez-vous à ce créneau
+    // boolean exists = rendezVousRepository
+    // .findByDateRdvAndHeureRdv(date, time)
+    // .isPresent();
+    //
+    // if (exists) {
+    // throw new IllegalArgumentException(
+    // "Un rendez-vous existe déjà pour ce créneau (date + heure).");
+    // }
+    //
+    // System.out.println("LocalDate.now() = " + LocalDate.now());
+    // System.out.println("dateRdv reçue = " + request.getDateRdv());
+    // }
 
     @Override
     public List<RendezVousResponse> getRendezVousByMedecinAndDate(Long medecinId, LocalDate date) {
@@ -210,7 +213,6 @@ public class RendezVousServiceImpl implements RendezVousService {
                 .toList();
     }
 
-
     @Override
     public List<RendezVousResponse> getByMedecinAndDate(Long cabinetId, Long medecinId, LocalDate date) {
         return rendezVousRepository
@@ -228,8 +230,5 @@ public class RendezVousServiceImpl implements RendezVousService {
                 .map(mapper::toResponse)
                 .toList();
     }
-
-
-
 
 }

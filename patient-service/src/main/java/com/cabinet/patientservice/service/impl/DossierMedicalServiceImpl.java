@@ -19,7 +19,7 @@ public class DossierMedicalServiceImpl implements DossierMedicalService {
     private final PatientRepository patientRepository;
 
     public DossierMedicalServiceImpl(DossierMedicalRepository dossierMedicalRepository,
-                                     PatientRepository patientRepository) {
+            PatientRepository patientRepository) {
         this.dossierMedicalRepository = dossierMedicalRepository;
         this.patientRepository = patientRepository;
     }
@@ -39,13 +39,14 @@ public class DossierMedicalServiceImpl implements DossierMedicalService {
                 .orElseThrow(() -> new ResourceNotFoundException("Patient with id " + patientId + " not found"));
 
         DossierMedical dossier = dossierMedicalRepository.findByPatient(patient)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Dossier medical for patient id " + patientId + " not found"));
+                .orElse(new DossierMedical());
+
+        if (dossier.getPatient() == null) {
+            dossier.setPatient(patient); // Link new dossier to patient
+        }
 
         DossierMedicalMapper.updateEntityFromDto(dto, dossier);
         DossierMedical saved = dossierMedicalRepository.save(dossier);
         return DossierMedicalMapper.toDto(saved);
     }
 }
-
-

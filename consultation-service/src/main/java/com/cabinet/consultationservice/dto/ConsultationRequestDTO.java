@@ -33,5 +33,6 @@ public class ConsultationRequestDTO {
     private String diagnostic;
 
     private String observations;
-}
 
+    private java.util.List<MedicamentDTO> medicaments;
+}
