@@ -23,7 +23,6 @@ public class ConsultationRequestDTO {
     @Size(max = 50, message = "Type must not exceed 50 characters")
     private String type; // CONSULTATION or CONTROLE
 
-    @NotNull(message = "Date consultation is required")
     private LocalDate dateConsultation;
 
     private String examenClinique;

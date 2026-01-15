@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +27,15 @@ public class SecurityConfig {
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
                 http
+                                .cors(cors -> cors.configurationSource(request -> {
+                                        var corsConfig = new CorsConfiguration();
+                                        corsConfig.setAllowedOrigins(java.util.List.of("http://localhost:4200"));
+                                        corsConfig.setAllowedMethods(
+                                                        java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                                        corsConfig.setAllowedHeaders(java.util.List.of("*"));
+                                        corsConfig.setAllowCredentials(true);
+                                        return corsConfig;
+                                }))
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -40,7 +50,7 @@ public class SecurityConfig {
 
                                                 // tout le reste doit être authentifié
                                                 .anyRequest().permitAll());
-                // ajout du filtre JWT avant le filtre d’auth standard
+                // ajout du filtre JWT avant le filtre d'auth standard
                 // .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();

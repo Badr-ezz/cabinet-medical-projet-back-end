@@ -62,6 +62,8 @@ public class Consultation {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        if (dateConsultation == null) {
+            dateConsultation = LocalDate.now();
+        }
     }
 }
-

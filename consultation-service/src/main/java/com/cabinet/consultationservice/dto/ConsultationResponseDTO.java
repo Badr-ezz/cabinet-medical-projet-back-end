@@ -30,4 +30,3 @@ public class ConsultationResponseDTO {
     @Builder.Default
     private List<OrdonnanceResponseDTO> ordonnances = new ArrayList<>();
 }
-
