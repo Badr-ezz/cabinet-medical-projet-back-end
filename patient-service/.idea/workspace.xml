@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a289a10d-0979-4e86-8a7d-0a8e120151df" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../consultation-service/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../consultation-service/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/contracts-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/contracts-1.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/surefire-reports/TEST-com.example.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/surefire-reports/TEST-com.example.AppTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../contracts/target/surefire-reports/com.example.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../contracts/target/surefire-reports/com.example.AppTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/repository/RendezVousRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/repository/RendezVousRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/service/RdvValidations.java" beforeDir="false" afterPath="$PROJECT_DIR$/../rendezvous-service/src/main/java/ma/cabinet/rendezvous_service/service/RdvValidations.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,6 +98,7 @@
       <workItem from="1767274913720" duration="121000" />
       <workItem from="1767788890121" duration="4996000" />
       <workItem from="1767887731755" duration="4964000" />
+      <workItem from="1768438726707" duration="643000" />
     </task>
     <servers />
   </component>
