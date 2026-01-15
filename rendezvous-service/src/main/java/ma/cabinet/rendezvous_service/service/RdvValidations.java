@@ -1,30 +1,26 @@
 package ma.cabinet.rendezvous_service.service;
 
-import com.example.patient.PatientResponseDTO;
-import lombok.extern.slf4j.Slf4j;
-import ma.cabinet.rendezvous_service.feign.PatientFeignClient;
+import com.example.auth.AuthResponse;
+import ma.cabinet.rendezvous_service.enums.StatutRDV;
 import ma.cabinet.rendezvous_service.feign.UserFeignClient;
 import ma.cabinet.rendezvous_service.repository.RendezVousRepository;
 import ma.cabinet.rendezvous_service.request.RendezVousRequest;
+
 import org.springframework.stereotype.Component;
-import com.example.auth.AuthResponse;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Slf4j
 @Component
 public class RdvValidations {
 
     private final RendezVousRepository rendezVousRepository;
     private final UserFeignClient userFeignClient;
-    private final PatientFeignClient patientFeignClient;
 
     public RdvValidations(RendezVousRepository rendezVousRepository,
-                          UserFeignClient userFeignClient, PatientFeignClient patientFeignClient) {
+                          UserFeignClient userFeignClient) {
         this.rendezVousRepository = rendezVousRepository;
         this.userFeignClient = userFeignClient;
-        this.patientFeignClient = patientFeignClient;
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -121,13 +117,14 @@ public class RdvValidations {
 
         // 4) Pas de doublon (même date + heure)
         boolean exists = rendezVousRepository
-                .findByDateRdvAndHeureRdv(date, time)
+                .findByDateRdvAndHeureRdvAndStatutNot(date, time, StatutRDV.ANNULE)
                 .isPresent();
 
         if (exists) {
             System.err.println("❌ Créneau déjà occupé: " + date + " " + time);
             return false;
         }
+
 
         System.out.println("✅ Validation RDV OK");
         return true;
@@ -163,26 +160,24 @@ public class RdvValidations {
     // ═══════════════════════════════════════════════════════════════
 
     public boolean isPatientExists(Long patientId) {
-
+        // TODO: Implémenter quand Patient-Service sera prêt
+        // Pour l'instant, toujours true
         if (patientId == null) {
             System.err.println("❌ PatientId null");
             return false;
         }
 
-        System.out.println("⚠️ Validation Patient :");
+        System.out.println("⚠️ Validation Patient temporaire (toujours true)");
+        return true;
 
-         try {
-             PatientResponseDTO patientResponseDTO = patientFeignClient.getPatientById(patientId);
-             log.info(patientResponseDTO.toString());
-             if(patientResponseDTO.getId() == null) {
-                 return false;
-             }
-             return true;
-         } catch (Exception e) {
-             e.printStackTrace();
-             System.err.println("❌ Patient inexistant: " + patientId);
-             return false;
-         }
+        // Future implémentation :
+        // try {
+        //     patientFeignClient.getPatient(patientId);
+        //     return true;
+        // } catch (Exception e) {
+        //     System.err.println("❌ Patient inexistant: " + patientId);
+        //     return false;
+        // }
     }
 
     // ═══════════════════════════════════════════════════════════════

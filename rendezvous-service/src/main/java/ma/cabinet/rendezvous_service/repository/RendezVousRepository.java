@@ -2,7 +2,9 @@ package ma.cabinet.rendezvous_service.repository;
 
 import jdk.jfr.Registered;
 import ma.cabinet.rendezvous_service.entity.RendezVous;
+import ma.cabinet.rendezvous_service.enums.StatutRDV;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.time.LocalDate;
@@ -10,7 +12,7 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 
-@Registered
+@Repository
 public interface RendezVousRepository extends JpaRepository<RendezVous,Long> {
     List<RendezVous> findAllByDateRdv(java.time.LocalDate dateRdv);
     Optional<RendezVous> findByDateRdvAndHeureRdv(LocalDate dateRdv, LocalTime heureRdv);
@@ -26,5 +28,11 @@ public interface RendezVousRepository extends JpaRepository<RendezVous,Long> {
     );
 
     List<RendezVous> findAllByCabinetIdAndDateRdvOrderByHeureRdvAsc(Long cabinetId, LocalDate dateRdv);
+
+    Optional<RendezVous> findByDateRdvAndHeureRdvAndStatutNot(
+            LocalDate date,
+            LocalTime heure,
+            StatutRDV status
+    );
 
 }
